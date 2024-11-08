@@ -6,44 +6,77 @@ test
 
 <form action="/" method="post">
 
-    <div>
-      <label for="name_field">Tier List Name</label>
-      <input id="name_field" type="text" name="the_name" value="<%=session[:tl_name]%>">
-    </div>
+<div id="item-container">
+  <!-- Item Template -->
+  <div class="item">
+    <fieldset>
+      <legend><h3>Item 1</h3></legend>
 
-    <hr>
-    <br>
-    <br>
+      <div>
+        <label for="item_name_field">Name of item</label>
+        <input id="item_name_field" type="text" name="the_item_name[]">
+      </div>
 
-    <div>
-      <fieldset>
-        <legend> <h3>Item 1</h3></legend>
+      <div>
+        <label for="item_description_field">Description</label>
+        <textarea id="item_description_field" rows="4" cols="50" name="the_item_desc[]"></textarea>
+      </div>
+
+      <br>
+
+      <h4>Item Details</h4>
+
+      <% (1..5).each do |i| %>
+        <% if session[:"field#{i}_name"].present? %>
           <div>
-            <label for="item_name_field">Name of item</label>
-            <input id="item_name_field"" type="text" name="the_item_name">
+            <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
+            <input id="item_detail<%= i %>" type="<%= session[:"field#{i}_datatype"] %>" name="item_detail<%= i %>[]">
           </div>
+        <% end %>
+      <% end %>
+    </fieldset>
+  </div>
+</div>
 
-          <div>
-            <label for="item_description_field">Description</label>
-            <textarea id="item_description_field" rows="4" cols="50" name="the_item_desc"></textarea>
-          </div>
+    <button type="button" onclick="addItem()">Add Another Item</button>
 
-          <br>
+<script>
+  // Define itemCount globally so it can be accessed within addItem
+  let itemCount = 1;
 
-          <h4>Item Details</h4>
+  function addItem() {
+    // Increment item count
+    itemCount++;
 
-          <% (1..5).each do |i| %>
-            <% if session[:"field#{i}_name"].present? %>
-              <div>
-                <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
-                <input id="item_detail<%= i %>" type="<%= session[:"field#{i}_datatype"] %>" name="item_detail<%= i %>">
-              </div>
-            <% end %>
-          <% end %>
+    // Select the container where new items will be added
+    const itemContainer = document.getElementById('item-container');
 
+    // Select the first item as a template and clone it
+    const templateItem = document.querySelector('.item');
+    
+    if (!templateItem) {
+      console.error("Template item with class 'item' not found.");
+      return; // Exit the function if the template is missing
+    }
+    
+    const newItem = templateItem.cloneNode(true);
 
+    // Update the legend with the new item number
+    newItem.querySelector('legend h3').textContent = `Item ${itemCount}`;
 
+    // Reset the IDs and values for the new fields
+    newItem.querySelectorAll('input, textarea').forEach((input) => {
+      // Reset the value for the new cloned inputs
+      input.value = '';
 
-    </div>
+      // Ensure each name attribute still has [] to handle arrays
+      const name = input.getAttribute('name');
+      input.setAttribute('name', name.replace(/\[\]$/, '') + '[]');
+    });
+
+    // Append the new item to the container
+    itemContainer.appendChild(newItem);
+  }
+</script>
 
 </form>
