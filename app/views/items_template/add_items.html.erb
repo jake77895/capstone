@@ -1,21 +1,49 @@
 <h1> Create a Tier List | Add Items </h1>
 
-<h1>"<%=session[:tl_name]%>"pizza</h1>
+<%=session[:field1_name]%>
+
+test
 
 <form action="/" method="post">
+
     <div>
       <label for="name_field">Tier List Name</label>
       <input id="name_field" type="text" name="the_name" value="<%=session[:tl_name]%>">
     </div>
 
-    <div>
-      <label for="item1">Tier List Name</label>
-      <input id="name_field" type="text" name="item1" value="<%=@tl_name%>">
-    </div>
+    <hr>
+    <br>
+    <br>
 
     <div>
-      <label for="item2">Tier List Name</label>
-      <input id="name_field" type="text" name="item2" value="<%=@field1_name%>">
+      <fieldset>
+        <legend> <h3>Item 1</h3></legend>
+          <div>
+            <label for="item_name_field">Name of item</label>
+            <input id="item_name_field"" type="text" name="the_item_name">
+          </div>
+
+          <div>
+            <label for="item_description_field">Description</label>
+            <textarea id="item_description_field" rows="4" cols="50" name="the_item_desc"></textarea>
+          </div>
+
+          <br>
+
+          <h4>Item Details</h4>
+
+          <% (1..5).each do |i| %>
+            <% if session[:"field#{i}_name"].present? %>
+              <div>
+                <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
+                <input id="item_detail<%= i %>" type="<%= session[:"field#{i}_datatype"] %>" name="item_detail<%= i %>">
+              </div>
+            <% end %>
+          <% end %>
+
+
+
+
     </div>
 
 </form>
