@@ -1,9 +1,21 @@
 <h1> Create a Tier List | Add Items </h1>
 
-<form action="/post_2" method="post">
+<h1>"<%=session[:tl_name]%>"pizza</h1>
+
+<form action="/" method="post">
     <div>
       <label for="name_field">Tier List Name</label>
-      <input id="name_field" type="text" name="the_name">
+      <input id="name_field" type="text" name="the_name" value="<%=session[:tl_name]%>">
+    </div>
+
+    <div>
+      <label for="item1">Tier List Name</label>
+      <input id="name_field" type="text" name="item1" value="<%=@tl_name%>">
+    </div>
+
+    <div>
+      <label for="item2">Tier List Name</label>
+      <input id="name_field" type="text" name="item2" value="<%=@field1_name%>">
     </div>
 
 </form>
