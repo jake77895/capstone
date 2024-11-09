@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   # get "/your_first_screen" => "pages#first"
   get("/", { :controller => "items", :action=> "create"})
+  get("/clear_session", { :controller => "items", :action=> "clear_session"})
+
   post("/create_field", { :controller => "items", :action => "submit"})
   get("/add_items", { :controller => "items", :action => "add_items"})
   

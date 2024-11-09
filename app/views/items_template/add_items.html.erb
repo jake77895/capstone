@@ -1,8 +1,14 @@
 <h1> Create a Tier List | Add Items </h1>
 
-<%=session[:field1_name]%>
+<a href="<%= clear_session_path %>">Go back</a>
 
-test
+
+
+  <div>
+    <label for="name_field">Tier List Name</label>
+    <input id="name_field" type="text" name="the_name" value="<%=session[:field1_name]%>">
+  </div>
+
 
 <form action="/" method="post">
 

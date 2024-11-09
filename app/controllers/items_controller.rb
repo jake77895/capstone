@@ -1,5 +1,10 @@
 class ItemsController < ApplicationController
 
+  def clear_session
+    session.clear
+    redirect_to("/")
+  end
+  
   def create
 
     render("/items_template/create_form")
