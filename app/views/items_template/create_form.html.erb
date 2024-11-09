@@ -1,120 +1,114 @@
-<h1> Create a Tier List | Add Item Categories </h1>
-
-
+<h1>Create a Tier List | Add Item Categories</h1>
 
 <form action="/create_field" method="post">
 
-    <div>
-      <label for="name_field">Tier List Name</label>
-      <input id="name_field" type="text" name="the_name">
-    </div>
+  <div>
+    <label for="name_field">Tier List Name</label>
+    <input id="name_field" type="text" name="the_name">
+  </div>
 
-  <h4> Columns already included for each item </h4>
-
-    <ul>
-      <li> Item name </li>
-      <li> Item description </li>
-
-    </ul>
-
-    <div id="fields-container">
-
-      <h4> Add additional fields for each item </h4>
-
-    <!-- Button to Add More Fields -->
-    <button type="button" onclick="addField()">Add Another Field</button>    
-
-    <p id="error-message" style="color: red;"></p>
-
-    <button type=submit>Submit</button>
+  <h4>Columns already included for each item</h4>
+  <ul>
+    <li>Item name</li>
+    <li>Item description</li>
+  </ul>
 
   <div id="fields-container">
-  <!-- Field 1 -->
-  <div class="field">
-    <fieldset>
-      <legend><h3>Field 1</h3></legend>
-      <div>
-        <input id="field_1" type="text" name="field1_name" placeholder="Enter name">
-        <select name="field1_datatype">
-          <option value="" selected disabled>Select Data Type</option>
-          <option value="Text">Text</option>
-          <option value="Number">Number</option>
-          <option value="Date">Date</option>
-        </select>
-      </div>
-    </fieldset>
+    <h4>Add additional fields for each item</h4>
+
+    <!-- Initial Fields (Fields 1 to 5) -->
+    <!-- Field 1 -->
+    <div class="field">
+      <fieldset>
+        <legend><h3>Field 1</h3></legend>
+        <div>
+          <input id="field_1" type="text" name="field1_name" placeholder="Enter name">
+          <select name="field1_datatype">
+            <option value="" selected disabled>Select Data Type</option>
+            <option value="Text">Text</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Repeat similar structure for Fields 2 to 5 -->
+
+    <div class="field">
+      <fieldset>
+        <legend><h3>Field 2</h3></legend>
+        <div>
+          <input id="field_2" type="text" name="field2_name" placeholder="Enter name">
+          <select name="field2_datatype">
+            <option value="" selected disabled>Select Data Type</option>
+            <option value="Text">Text</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Field 3 -->
+    <div class="field">
+      <fieldset>
+        <legend><h3>Field 3</h3></legend>
+        <div>
+          <input id="field_3" type="text" name="field3_name" placeholder="Enter name">
+          <select name="field3_datatype">
+            <option value="" selected disabled>Select Data Type</option>
+            <option value="Text">Text</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Field 4 -->
+    <div class="field">
+      <fieldset>
+        <legend><h3>Field 4</h3></legend>
+        <div>
+          <input id="field_4" type="text" name="field4_name" placeholder="Enter name">
+          <select name="field4_datatype">
+            <option value="" selected disabled>Select Data Type</option>
+            <option value="Text">Text</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Field 5 -->
+    <div class="field">
+      <fieldset>
+        <legend><h3>Field 5</h3></legend>
+        <div>
+          <input id="field_5" type="text" name="field5_name" placeholder="Enter name">
+          <select name="field5_datatype">
+            <option value="" selected disabled>Select Data Type</option>
+            <option value="Text">Text</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    </div>
   </div>
 
-  <!-- Field 2 -->
-  <div class="field">
-    <fieldset>
-      <legend><h3>Field 2</h3></legend>
-      <div>
-        <input id="field_2" type="text" name="field2_name" placeholder="Enter name">
-        <select name="field2_datatype">
-          <option value="" selected disabled>Select Data Type</option>
-          <option value="Text">Text</option>
-          <option value="Number">Number</option>
-          <option value="Date">Date</option>
-        </select>
-      </div>
-    </fieldset>
-  </div>
+  <!-- Button to Add More Fields -->
+  <button type="button" onclick="addField()">Add Another Field</button>    
+  <p id="error-message" style="color: red;"></p>
 
-  <!-- Field 3 -->
-  <div class="field">
-    <fieldset>
-      <legend><h3>Field 3</h3></legend>
-      <div>
-        <input id="field_3" type="text" name="field3_name" placeholder="Enter name">
-        <select name="field3_datatype">
-          <option value="" selected disabled>Select Data Type</option>
-          <option value="Text">Text</option>
-          <option value="Number">Number</option>
-          <option value="Date">Date</option>
-        </select>
-      </div>
-    </fieldset>
-  </div>
-
-  <!-- Field 4 -->
-  <div class="field">
-    <fieldset>
-      <legend><h3>Field 4</h3></legend>
-      <div>
-        <input id="field_4" type="text" name="field4_name" placeholder="Enter name">
-        <select name="field4_datatype">
-          <option value="" selected disabled>Select Data Type</option>
-          <option value="Text">Text</option>
-          <option value="Number">Number</option>
-          <option value="Date">Date</option>
-        </select>
-      </div>
-    </fieldset>
-  </div>
-
-  <!-- Field 5 -->
-  <div class="field">
-    <fieldset>
-      <legend><h3>Field 5</h3></legend>
-      <div>
-        <input id="field_5" type="text" name="field5_name" placeholder="Enter name">
-        <select name="field5_datatype">
-          <option value="" selected disabled>Select Data Type</option>
-          <option value="Text">Text</option>
-          <option value="Number">Number</option>
-          <option value="Date">Date</option>
-        </select>
-      </div>
-    </fieldset>
-  </div>
-</div>
-
-
+  <!-- Submit Button -->
+  <button type="submit">Submit</button>
+</form>
 
 <script>
-  // Start fieldCount at 6 since we already have fields 1 through 5
-  let fieldCount = 6;
+  let fieldCount = 6; // Initial count, assuming fields 1 to 5 exist
 
   function addField() {
     // Check if fieldCount has reached the maximum limit of 10
@@ -174,12 +168,3 @@
     fieldCount++;
   }
 </script>
-
-
-
-    
-
-
-
-
-</form>

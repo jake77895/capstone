@@ -8,5 +8,8 @@ Rails.application.routes.draw do
 
   post("/create_field", { :controller => "items", :action => "submit"})
   get("/add_items", { :controller => "items", :action => "add_items"})
+
+  post('/update_field_count', { :controller => "items", action => "update_field_count"})
+
   
 end

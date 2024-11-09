@@ -1,12 +1,14 @@
 <h1> Create a Tier List | Add Items </h1>
 
+<h1> pizza <%= session[:field_count] %> </h1>
+
 <a href="<%= clear_session_path %>">Go back</a>
 
 
 
   <div>
     <label for="name_field">Tier List Name</label>
-    <input id="name_field" type="text" name="the_name" value="<%=session[:field1_name]%>">
+    <input id="name_field" type="text" name="the_name" value="<%=session[:tl_name]%>">
   </div>
 
 
@@ -32,7 +34,7 @@
 
       <h4>Item Details</h4>
 
-      <% (1..5).each do |i| %>
+      <% (1..10)).each do |i| %>
         <% if session[:"field#{i}_name"].present? %>
           <div>
             <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
