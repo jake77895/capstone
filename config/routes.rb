@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   #Home 
   get("/", { :controller => "nav", :action => "index"})
+  root to: 'pages#home'
 
   # Create Tier Lists
   get("/create_item_categories", { :controller => "create_tls", :action=> "create"})
@@ -11,7 +12,7 @@ Rails.application.routes.draw do
   post("/submit_tl", { :controller => "create_tls", :action => "submit_tl" })
 
   # Fill in Tier Lists
-  get("/rank_items", { :controller => "rank_tls_controller", :action => "rank"})
+  get("/rank_items", { :controller => "rank_tls", :action => "rank"})
 
 
   

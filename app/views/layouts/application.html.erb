@@ -11,13 +11,22 @@
   </head>
 
   <body>
-    <nav>
-      <a href="/">
-        Home
-      </a>
-    </nav>
+    <!-- Header Section -->
+    <header>
+      <h1><%= link_to 'Your Site Title', root_path %></h1> <!-- Site title linking to home page -->
+    </header>
 
-    <%= yield %>
+    <!-- Main Content Section -->
+    <div id="content">
+      <%= yield %> <!-- This renders the view content for each specific page -->
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+      <p>&copy; <%= Time.now.year %> Your Company Name. All rights reserved.</p>
+    </footer>
+
+  
   </body>
   
 </html>

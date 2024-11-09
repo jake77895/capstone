@@ -6,4 +6,7 @@ class NavController < ApplicationController
 
   end 
 
+  def home
+  end
+
 end
