@@ -12,8 +12,17 @@
 
   <body>
     <!-- Header Section -->
-    <header>
-      <h1><%= link_to 'Your Site Title', root_path %></h1> <!-- Site title linking to home page -->
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Site Title aligned to the left -->
+    <h1><%= link_to 'Your Site Title', root_path %></h1>
+
+    <!-- Right-side container for Login and Sign Up links -->
+    <div style="display: flex; gap: 15px;">
+      <h1 style="font-size: 1.5em; margin: 0;"><%= link_to 'Login', login_path %></h1>
+      <h1 style="font-size: 1.5em; margin: 0;"><%= link_to 'Sign Up', signup_path %></h1>
+    </div>
+
+
     </header>
 
     <!-- Main Content Section -->

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  #Home 
+  # Home 
   get("/", { :controller => "nav", :action => "index"})
   root to: 'pages#home'
 
@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   # Fill in Tier Lists
   get("/rank_items", { :controller => "rank_tls", :action => "rank"})
 
+  # Login Flow
+  get("/signup", { :controller => "user", :action=>"signup"})
+  get("/login", { :controller => "user", :action=>"login"})
 
   
 end
