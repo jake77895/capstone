@@ -1,7 +1,5 @@
 <h1> Create a Tier List | Add Items </h1>
 
-<h1> pizza <%= session[:field_count] %> </h1>
-
 <a href="<%= clear_session_path %>">Go back</a>
 
 
@@ -12,7 +10,7 @@
   </div>
 
 
-<form action="/" method="post">
+<form action="/submit_tl" method="post">
 
 <div id="item-container">
   <!-- Item Template -->
@@ -34,7 +32,7 @@
 
       <h4>Item Details</h4>
 
-      <% (1..10)).each do |i| %>
+      <% (1..10).each do |i| %>
         <% if session[:"field#{i}_name"].present? %>
           <div>
             <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
@@ -47,6 +45,7 @@
 </div>
 
     <button type="button" onclick="addItem()">Add Another Item</button>
+    <button type=submit>Create Tier List</button>
 
 <script>
   // Define itemCount globally so it can be accessed within addItem

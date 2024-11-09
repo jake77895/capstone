@@ -1,16 +1,11 @@
-class ItemsController < ApplicationController
+class CreateTlsController < ApplicationController
+  
+  def submit_tl
 
-  def update_field_count
-    # Parse the JSON request body (Rails should handle this automatically)
-    data = JSON.parse(request.body.read) rescue {}
-    
-    # Update session with new field count if it exists
-    if data['field_count']
-      session[:field_count] = data['field_count']
-      render json: { success: true, field_count: session[:field_count] }, status: :ok
-    else
-      render json: { success: false, error: "No field count provided" }, status: :unprocessable_entity
-    end
+    # Need to add in the code to save the tier list in the database
+
+    redirect_to ("/rank_items"), notice: "Object created successfully"
+
   end
   
   def clear_session
@@ -20,12 +15,12 @@ class ItemsController < ApplicationController
   
   def create
 
-    render("/items_template/create_form")
+    render("/createTl_template/create_form")
 
   end
 
 
-  def submit
+  def submit_fields
     @tl_name = params.fetch("the_name")
     session[:tl_name] = @tl_name
   
@@ -49,7 +44,7 @@ class ItemsController < ApplicationController
 
   def add_items
     
-    render("/items_template/add_items")
+    render("/createTl_template/add_items")
     
   end
 

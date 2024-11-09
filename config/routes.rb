@@ -1,15 +1,18 @@
 Rails.application.routes.draw do
 
-  # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
+  #Home 
+  get("/", { :controller => "nav", :action => "index"})
 
-  # get "/your_first_screen" => "pages#first"
-  get("/", { :controller => "items", :action=> "create"})
-  get("/clear_session", { :controller => "items", :action=> "clear_session"})
+  # Create Tier Lists
+  get("/create_item_categories", { :controller => "create_tls", :action=> "create"})
+  post("/create_field", { :controller => "create_tls", :action => "submit_fields"})
+  get("/clear_session", { :controller => "create_tls", :action=> "clear_session"})
+  get("/add_items", { :controller => "create_tls", :action => "add_items"})
+  post("/submit_tl", { :controller => "create_tls", :action => "submit_tl" })
 
-  post("/create_field", { :controller => "items", :action => "submit"})
-  get("/add_items", { :controller => "items", :action => "add_items"})
+  # Fill in Tier Lists
+  get("/rank_items", { :controller => "rank_tls_controller", :action => "rank"})
 
-  post('/update_field_count', { :controller => "items", action => "update_field_count"})
 
   
 end
