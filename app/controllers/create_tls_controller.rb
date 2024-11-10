@@ -3,6 +3,7 @@ class CreateTlsController < ApplicationController
   def submit_tl
 
     # Need to add in the code to save the tier list in the database
+    puts "Params received: #{params.inspect}"
 
     redirect_to ("/rank_items"), notice: "Object created successfully"
 
@@ -48,12 +49,15 @@ class CreateTlsController < ApplicationController
 
   def add_items
     
-  # Retrieve the tier list name and fields from the session
-  @tl_name = session[:tl_name]
-  @fields = session[:fields]
-  
-  # Render the template (this line is technically optional, as Rails will automatically render `add_items.html.erb` in `createTl_template`)
-  render("/createTl_template/add_items")
+    # Retrieve the tier list name and fields from the session
+    @tl_name = session[:tl_name]
+    @fields = (session[:fields] || []).map do |field|
+      { name: field["name"], datatype: field["datatype"] }
+    end
+    puts "Debugging @fields in controller: #{@fields.inspect}"
+    
+    # Render the template (this line is technically optional, as Rails will automatically render `add_items.html.erb` in `createTl_template`)
+    render("/createTl_template/add_items")
     
   end
 

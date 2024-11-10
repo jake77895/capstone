@@ -1,6 +1,6 @@
 <h1>Create a Tier List | Add Item Categories</h1>
 
-<!--Creates custom fields for items in the tier list-->
+<!-- Creates custom fields for items in the tier list -->
 <%= form_with url: create_field_path, method: :post, local: true do |form| %>
   <div>
     <%= form.label :the_name, "Tier List Name" %>
@@ -30,13 +30,13 @@
     <% end %>
   </div>
 
+  <!-- Button to add more fields -->
+  <button type="button" onclick="addField()">Add Another Field</button>    
+  <p id="error-message" style="color: red;"></p>
+
   <!-- Submit Button -->
   <%= form.submit "Submit" %>
 <% end %>
-
-
-
-
 
 <script>
   let fieldCount = 6; // Initial count, assuming fields 1 to 5 exist

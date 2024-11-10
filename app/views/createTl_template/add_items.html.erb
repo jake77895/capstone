@@ -9,37 +9,72 @@
 
 <%= debug @fields %>
 
+<%# Output @fields for debugging %>
+<% if @fields.present? %>
+  <h4>Debug: @fields contains:</h4>
+  <ul>
+    <% @fields.each do |field| %>
+      <li><%= field.inspect %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Debug: @fields is empty or nil</p>
+<% end %>
+
+
+<h1>Create a Tier List | Add Items</h1>
+
+<% if @tl_name.present? %>
+  <p>Tier List Name: <%= @tl_name %></p>
+<% end %>
 
 <%= form_with url: submit_tl_path, method: :post, local: true do |form| %>
   <div id="item-container">
-    <!-- Item Template -->
+    <!-- Main Item Fields -->
     <div class="item">
       <fieldset>
         <legend><h3>Item 1</h3></legend>
 
+        <!-- Standard item name field -->
         <div>
           <%= form.label :name, "Name of item" %>
           <%= form.text_field :name, name: "the_item_name[]" %>
         </div>
 
+        <!-- Standard item description field -->
         <div>
           <%= form.label :description, "Description" %>
           <%= form.text_area :description, rows: 4, cols: 50, name: "the_item_desc[]" %>
         </div>
 
+        <!-- Additional custom fields -->
         <% if @fields.present? %>
-          <h4>Item Details</h4>
+          <h4>Additional Fields</h4>
           <% @fields.each_with_index do |field, i| %>
             <div>
-              <%= form.label "custom_fields[#{field[:name]}]", field[:name] %>
-              <% case field[:datatype] %>
-              <% when "text" %>
-                <%= form.text_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
-              <% when "number" %>
-                <%= form.number_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
-              <% when "date" %>
-                <%= form.date_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
+              <!-- Safely handle nil values for field[:name] and debug output -->
+              <label for="custom_fields_<%= i %>_value">
+                <% if field[:name].present? %>
+                  <%= field[:name].capitalize %>
+                <% else %>
+                  Unnamed Field
+                <% end %>
+              </label>
+
+              <!-- Input field based on the datatype -->
+              <% if field[:datatype] == "text" %>
+                <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+              <% elsif field[:datatype] == "number" %>
+                <input type="number" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+              <% elsif field[:datatype] == "date" %>
+                <input type="date" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+              <% else %>
+                <!-- Fallback to a text field if datatype is unknown -->
+                <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
               <% end %>
+
+              <!-- Hidden field to store the field name -->
+              <input type="hidden" name="custom_fields[<%= i %>][name]" value="<%= field[:name] %>">
             </div>
           <% end %>
         <% end %>
@@ -50,6 +85,11 @@
   <button type="button" onclick="addItem()">Add Another Item</button>
   <%= form.submit "Create Tier List" %>
 <% end %>
+
+
+
+
+
 
 
 <script>
