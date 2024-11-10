@@ -29,7 +29,7 @@
 <% end %>
 
 
-<%= form_with model: @item, local: true do |form| %>
+<%= form_with url: submit_tl_path, method: :post, local: true do |form| %>
   <div id="item-container">
     <!-- Item Fields -->
     <div class="item">
@@ -39,13 +39,13 @@
         <!-- Standard item name field -->
         <div>
           <%= form.label :name, "Name of item" %>
-          <%= form.text_field :name, name: "the_item_name[]" %>
+          <%= form.text_field :name, name: "item[name]" %> <!-- Grouped under item -->
         </div>
 
         <!-- Standard item description field -->
         <div>
           <%= form.label :description, "Description" %>
-          <%= form.text_area :description, rows: 4, cols: 50, name: "the_item_desc[]" %>
+          <%= form.text_area :description, rows: 4, cols: 50, name: "item[description]" %> <!-- Grouped under item -->
         </div>
 
         <!-- Custom Fields Section -->
@@ -61,18 +61,16 @@
               <!-- Input field based on the datatype -->
               <% case field[:datatype] %>
               <% when "text" %>
-                <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+                <input type="text" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
               <% when "number" %>
-                <input type="number" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+                <input type="number" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
               <% when "date" %>
-                <input type="date" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+                <input type="date" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
               <% else %>
-                <!-- Default to text field if datatype is unknown -->
-                <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
+                <input type="text" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
               <% end %>
 
-              <!-- Hidden field to store the field name -->
-              <input type="hidden" name="custom_fields[<%= i %>][name]" value="<%= field[:name] %>">
+              <!-- We do not need a hidden field here, as the name structure already groups values correctly -->
             </div>
           <% end %>
         <% end %>
@@ -85,8 +83,9 @@
   <%= form.submit "Create Tier List" %>
 <% end %>
 
+
 <script>
-  let itemCount = 1; // Initial item count, assuming "Item 1" is already rendered
+  let itemCount = 1; // Track the number of items
 
   function addItem() {
     itemCount++;

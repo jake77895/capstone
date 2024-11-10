@@ -1,23 +1,39 @@
 class CreateTlsController < ApplicationController
   
   def submit_tl
+    # Log the entire params hash for inspection
+    puts "Params received: #{params.inspect}"
 
-    # Need to add in the code to save the tier list in the database
-        
-    # Use Item model to create a new item
-    @item = Item.new(
-      name: params[:item][:name],
-      description: params[:item][:description],
-      custom_fields: params[:item][:custom_fields]
-    )
+    # Check if params[:item] exists and log it
+    if params[:item].present?
+      puts "Params for item: #{params[:item].inspect}"
+    else
+      puts "No item data found in params"
+    end
 
+    # Initialize the item with item_params (using strong parameters)
+    @item = Item.new(item_params)
+    
+    # Log the @item object to verify initialization
+    puts "Item object initialized: #{@item.inspect}"
+
+    # Attempt to save the item and log success or failure
     if @item.save
+      puts "Item saved successfully"
       redirect_to "/rank_items", notice: "Object created successfully"
     else
+      puts "Error saving item: #{@item.errors.full_messages.inspect}"
       render :new, alert: "Error saving item"
     end
- 
   end
+
+  def item_params
+    # Use strong parameters and log the permitted params
+    permitted_params = params.require(:item).permit(:name, :description, custom_fields: {})
+    puts "Permitted params for item: #{permitted_params.inspect}"
+    permitted_params
+  end
+
   
   def clear_session
     session.clear

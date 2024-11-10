@@ -8,19 +8,21 @@
 <body>
   <div style="display: flex; flex-wrap: wrap; width: 100%;">
 
-    <!-- Main Container: 3/4 Width -->
+    <!-- Main Container: -->
     <div style="flex: 3 1 60%; padding: 20px; box-sizing: border-box;">
       <h1>Tier List Displayed</h1>
       <p>This container takes up 3/4 of the page width on larger screens and resizes dynamically on smaller screens.</p>
       <!-- Add more content as needed -->
 
     <!-- Render the item card as a button -->
-    <%= render 'item_templates/item_card' %>
+    <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
 
     <button onclick="showPopup()"> Testing button</button>
 
     <!-- Render the popup for item details -->
-    <%= render 'item_templates/item_popup' %>
+    
+
+
 
     </div>
 

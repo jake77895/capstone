@@ -18,10 +18,12 @@ Rails.application.routes.draw do
 
   # Fill in Tier Lists
   get("/rank_items", { :controller => "rank_tls", :action => "rank"})
+  get "/rank_items", to: "items#rank_items", as: :rank_items
+
 
   # Login Flow
   get("/signup", { :controller => "user", :action=>"signup"})
-  get("/login", { :controller => "user", :action=>"login"})
+  get "/login", { controller: "user", action: "login", as: :login }
 
   
 end
