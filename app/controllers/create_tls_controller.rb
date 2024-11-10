@@ -3,10 +3,20 @@ class CreateTlsController < ApplicationController
   def submit_tl
 
     # Need to add in the code to save the tier list in the database
-    puts "Params received: #{params.inspect}"
+        
+    # Use Item model to create a new item
+    @item = Item.new(
+      name: params[:item][:name],
+      description: params[:item][:description],
+      custom_fields: params[:item][:custom_fields]
+    )
 
-    redirect_to ("/rank_items"), notice: "Object created successfully"
-
+    if @item.save
+      redirect_to "/rank_items", notice: "Object created successfully"
+    else
+      render :new, alert: "Error saving item"
+    end
+ 
   end
   
   def clear_session

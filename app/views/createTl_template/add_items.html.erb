@@ -28,9 +28,10 @@
   <p>Tier List Name: <%= @tl_name %></p>
 <% end %>
 
-<%= form_with url: submit_tl_path, method: :post, local: true do |form| %>
+
+<%= form_with model: @item, local: true do |form| %>
   <div id="item-container">
-    <!-- Main Item Fields -->
+    <!-- Item Fields -->
     <div class="item">
       <fieldset>
         <legend><h3>Item 1</h3></legend>
@@ -47,29 +48,26 @@
           <%= form.text_area :description, rows: 4, cols: 50, name: "the_item_desc[]" %>
         </div>
 
-        <!-- Additional custom fields -->
+        <!-- Custom Fields Section -->
         <% if @fields.present? %>
-          <h4>Additional Fields</h4>
+          <h4>Custom Fields</h4>
           <% @fields.each_with_index do |field, i| %>
             <div>
-              <!-- Safely handle nil values for field[:name] and debug output -->
+              <!-- Label for custom field -->
               <label for="custom_fields_<%= i %>_value">
-                <% if field[:name].present? %>
-                  <%= field[:name].capitalize %>
-                <% else %>
-                  Unnamed Field
-                <% end %>
+                <%= field[:name].present? ? field[:name].capitalize : "Unnamed Field" %>
               </label>
 
               <!-- Input field based on the datatype -->
-              <% if field[:datatype] == "text" %>
+              <% case field[:datatype] %>
+              <% when "text" %>
                 <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
-              <% elsif field[:datatype] == "number" %>
+              <% when "number" %>
                 <input type="number" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
-              <% elsif field[:datatype] == "date" %>
+              <% when "date" %>
                 <input type="date" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
               <% else %>
-                <!-- Fallback to a text field if datatype is unknown -->
+                <!-- Default to text field if datatype is unknown -->
                 <input type="text" name="custom_fields[<%= i %>][value]" id="custom_fields_<%= i %>_value">
               <% end %>
 
@@ -82,44 +80,36 @@
     </div>
   </div>
 
+  <!-- Button to add another item section -->
   <button type="button" onclick="addItem()">Add Another Item</button>
   <%= form.submit "Create Tier List" %>
 <% end %>
 
-
-
-
-
-
-
 <script>
-  let itemCount = 1;
+  let itemCount = 1; // Initial item count, assuming "Item 1" is already rendered
 
   function addItem() {
     itemCount++;
     const itemContainer = document.getElementById('item-container');
     const templateItem = document.querySelector('.item');
-    
+
     if (!templateItem) {
       console.error("Template item with class 'item' not found.");
       return;
     }
-    
-    const newItem = templateItem.cloneNode(true);
-    newItem.querySelector('legend h3').textContent = `Item ${itemCount}`;
 
+    const newItem = templateItem.cloneNode(true);
+
+    // Update the new item’s legend and input names
+    newItem.querySelector('legend h3').textContent = `Item ${itemCount}`;
     newItem.querySelectorAll('input, textarea').forEach((input) => {
       input.value = ''; // Clear the input value for the cloned item
-      const id = input.getAttribute('id');
-      if (id) {
-        input.setAttribute('id', id.replace(/_\d+$/, `_${itemCount}`));
-      }
-    });
 
-    newItem.querySelectorAll('label').forEach((label) => {
-      const forAttr = label.getAttribute('for');
-      if (forAttr) {
-        label.setAttribute('for', forAttr.replace(/_\d+$/, `_${itemCount}`));
+      if (input.getAttribute('name')) {
+        input.setAttribute('name', input.getAttribute('name').replace(/\[\d*\]/, `[]`));
+      }
+      if (input.getAttribute('id')) {
+        input.setAttribute('id', input.getAttribute('id').replace(/_\d+_/, `_${itemCount}_`));
       }
     });
 

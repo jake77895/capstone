@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get("/clear_session", { :controller => "create_tls", :action=> "clear_session"})
   get("/add_items", { :controller => "create_tls", :action => "add_items"})
   post("/submit_tl", { :controller => "create_tls", :action => "submit_tl" })
+  # post "/submit_tl", to: "items#create", as: :submit_tl
+
 
   resources :fields, only: [:new, :create]
   resources :items, only: [:new, :create, :show]
