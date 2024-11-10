@@ -1,9 +1,10 @@
 <h1>Create a Tier List | Add Item Categories</h1>
 
+<!--Creates custom fields for items in the tier list-->
 <%= form_with url: create_field_path, method: :post, local: true do |form| %>
   <div>
     <%= form.label :the_name, "Tier List Name" %>
-    <%= form.text_field :the_name, id: "name_field" %>
+    <%= form.text_field :the_name, id: "name_field", name: "the_name" %>
   </div>
 
   <h4>Columns already included for each item</h4>
@@ -15,67 +16,27 @@
   <div id="fields-container">
     <h4>Add additional fields for each item</h4>
 
-    <!-- Initial Fields (Fields 1 to 5) -->
-    <!-- Field 1 -->
-    <div class="field">
-      <fieldset>
-        <legend><h3>Field 1</h3></legend>
-        <div>
-          <%= form.text_field :field1_name, placeholder: "Enter name", id: "field_1" %>
-          <%= form.select :field1_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
-        </div>
-      </fieldset>
-    </div>
-
-    <!-- Repeat similar structure for Fields 2 to 5 -->
-    <div class="field">
-      <fieldset>
-        <legend><h3>Field 2</h3></legend>
-        <div>
-          <%= form.text_field :field2_name, placeholder: "Enter name", id: "field_2" %>
-          <%= form.select :field2_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="field">
-      <fieldset>
-        <legend><h3>Field 3</h3></legend>
-        <div>
-          <%= form.text_field :field3_name, placeholder: "Enter name", id: "field_3" %>
-          <%= form.select :field3_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="field">
-      <fieldset>
-        <legend><h3>Field 4</h3></legend>
-        <div>
-          <%= form.text_field :field4_name, placeholder: "Enter name", id: "field_4" %>
-          <%= form.select :field4_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="field">
-      <fieldset>
-        <legend><h3>Field 5</h3></legend>
-        <div>
-          <%= form.text_field :field5_name, placeholder: "Enter name", id: "field_5" %>
-          <%= form.select :field5_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
-        </div>
-      </fieldset>
-    </div>
+    <!-- Loop to generate fields 1 through 5 -->
+    <% (1..5).each do |i| %>
+      <div class="field">
+        <fieldset>
+          <legend><h3>Field <%= i %></h3></legend>
+          <div>
+            <%= form.text_field "field#{i}_name", placeholder: "Enter name", id: "field_#{i}_name", name: "field#{i}_name" %>
+            <%= form.select "field#{i}_datatype", [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" }, name: "field#{i}_datatype" %>
+          </div>
+        </fieldset>
+      </div>
+    <% end %>
   </div>
-
-  <!-- Button to Add More Fields -->
-  <button type="button" onclick="addField()">Add Another Field</button>    
-  <p id="error-message" style="color: red;"></p>
 
   <!-- Submit Button -->
   <%= form.submit "Submit" %>
 <% end %>
+
+
+
+
 
 <script>
   let fieldCount = 6; // Initial count, assuming fields 1 to 5 exist

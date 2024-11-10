@@ -1,16 +1,16 @@
-<h1> Create a Tier List | Add Items </h1>
+<h1>Create a Tier List | Add Items</h1>
 
 <a href="<%= clear_session_path %>">Go back</a>
 
+<div>
+  <label>Tier List Name:</label>
+  <span><%= @tl_name %></span>
+</div>
+
+<%= debug @fields %>
 
 
-  <div>
-    <label for="name_field">Tier List Name</label>
-    <input id="name_field" type="text" name="the_name" value="<%=session[:tl_name]%>">
-  </div>
-
-
-<%= form_with model: @item, local: true do |form| %>
+<%= form_with url: submit_tl_path, method: :post, local: true do |form| %>
   <div id="item-container">
     <!-- Item Template -->
     <div class="item">
@@ -19,34 +19,30 @@
 
         <div>
           <%= form.label :name, "Name of item" %>
-          <%= form.text_field :name %>
+          <%= form.text_field :name, name: "the_item_name[]" %>
         </div>
 
         <div>
           <%= form.label :description, "Description" %>
-          <%= form.text_area :description, rows: 4, cols: 50 %>
+          <%= form.text_area :description, rows: 4, cols: 50, name: "the_item_desc[]" %>
         </div>
-
-        <br>
 
         <% if @fields.present? %>
           <h4>Item Details</h4>
-
           <% @fields.each_with_index do |field, i| %>
             <div>
-              <%= form.label "custom_fields[#{field.name}]", field.name %>
-              <% case field.data_type %>
-              <% when "Text" %>
-                <%= form.text_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
-              <% when "Number" %>
-                <%= form.number_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
-              <% when "Date" %>
-                <%= form.date_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
+              <%= form.label "custom_fields[#{field[:name]}]", field[:name] %>
+              <% case field[:datatype] %>
+              <% when "text" %>
+                <%= form.text_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
+              <% when "number" %>
+                <%= form.number_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
+              <% when "date" %>
+                <%= form.date_field "custom_fields[#{field[:name]}][]", id: "item_detail_#{i + 1}_#{itemCount}" %>
               <% end %>
             </div>
           <% end %>
-        <% end %> <!-- End conditional for @fields.present? -->
-
+        <% end %>
       </fieldset>
     </div>
   </div>
