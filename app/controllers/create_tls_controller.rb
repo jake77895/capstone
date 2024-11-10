@@ -21,25 +21,26 @@ class CreateTlsController < ApplicationController
 
 
   def submit_fields
-    @tl_name = params.fetch("the_name")
-    session[:tl_name] = @tl_name
+
+  
+    # Store the tier list name in the session if present
+    session[:tl_name] = params["the_name"]
+
+    # Initialize an array in the session to store fields
+    session[:fields] = []
   
     (1..10).each do |i|
-      # Set the field name if present
-      field_name_key = "field#{i}_name"
-      if params[field_name_key].present?
-        session[:"#{field_name_key}"] = params[field_name_key]
-      end
+      field_name = params["field#{i}_name"]
+      field_datatype = params["field#{i}_datatype"]
   
-      # Set the field datatype if present
-      field_datatype_key = "field#{i}_datatype"
-      if params[field_datatype_key].present?
-        session[:"#{field_datatype_key}"] = params[field_datatype_key].downcase
+      # Only store the field if both name and datatype are present
+      if field_name.present? && field_datatype.present?
+        session[:fields] << { name: field_name, datatype: field_datatype.downcase }
       end
     end
-
+  
+    # Redirect to the add items page
     redirect_to("/add_items")
-
   end
 
   def add_items

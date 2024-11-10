@@ -10,80 +10,83 @@
   </div>
 
 
-<form action="/submit_tl" method="post">
+<%= form_with model: @item, local: true do |form| %>
+  <div id="item-container">
+    <!-- Item Template -->
+    <div class="item">
+      <fieldset>
+        <legend><h3>Item 1</h3></legend>
 
-<div id="item-container">
-  <!-- Item Template -->
-  <div class="item">
-    <fieldset>
-      <legend><h3>Item 1</h3></legend>
+        <div>
+          <%= form.label :name, "Name of item" %>
+          <%= form.text_field :name %>
+        </div>
 
-      <div>
-        <label for="item_name_field">Name of item</label>
-        <input id="item_name_field" type="text" name="the_item_name[]">
-      </div>
+        <div>
+          <%= form.label :description, "Description" %>
+          <%= form.text_area :description, rows: 4, cols: 50 %>
+        </div>
 
-      <div>
-        <label for="item_description_field">Description</label>
-        <textarea id="item_description_field" rows="4" cols="50" name="the_item_desc[]"></textarea>
-      </div>
+        <br>
 
-      <br>
+        <% if @fields.present? %>
+          <h4>Item Details</h4>
 
-      <h4>Item Details</h4>
+          <% @fields.each_with_index do |field, i| %>
+            <div>
+              <%= form.label "custom_fields[#{field.name}]", field.name %>
+              <% case field.data_type %>
+              <% when "Text" %>
+                <%= form.text_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
+              <% when "Number" %>
+                <%= form.number_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
+              <% when "Date" %>
+                <%= form.date_field "custom_fields[#{field.name}]", id: "item_detail_#{i + 1}_#{item_count}" %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %> <!-- End conditional for @fields.present? -->
 
-      <% (1..10).each do |i| %>
-        <% if session[:"field#{i}_name"].present? %>
-          <div>
-            <label for="item_detail<%= i %>"><%= session[:"field#{i}_name"] %></label>
-            <input id="item_detail<%= i %>" type="<%= session[:"field#{i}_datatype"] %>" name="item_detail<%= i %>[]">
-          </div>
-        <% end %>
-      <% end %>
-    </fieldset>
+      </fieldset>
+    </div>
   </div>
-</div>
 
-    <button type="button" onclick="addItem()">Add Another Item</button>
-    <button type=submit>Create Tier List</button>
+  <button type="button" onclick="addItem()">Add Another Item</button>
+  <%= form.submit "Create Tier List" %>
+<% end %>
+
 
 <script>
-  // Define itemCount globally so it can be accessed within addItem
   let itemCount = 1;
 
   function addItem() {
-    // Increment item count
     itemCount++;
-
-    // Select the container where new items will be added
     const itemContainer = document.getElementById('item-container');
-
-    // Select the first item as a template and clone it
     const templateItem = document.querySelector('.item');
     
     if (!templateItem) {
       console.error("Template item with class 'item' not found.");
-      return; // Exit the function if the template is missing
+      return;
     }
     
     const newItem = templateItem.cloneNode(true);
-
-    // Update the legend with the new item number
     newItem.querySelector('legend h3').textContent = `Item ${itemCount}`;
 
-    // Reset the IDs and values for the new fields
     newItem.querySelectorAll('input, textarea').forEach((input) => {
-      // Reset the value for the new cloned inputs
-      input.value = '';
-
-      // Ensure each name attribute still has [] to handle arrays
-      const name = input.getAttribute('name');
-      input.setAttribute('name', name.replace(/\[\]$/, '') + '[]');
+      input.value = ''; // Clear the input value for the cloned item
+      const id = input.getAttribute('id');
+      if (id) {
+        input.setAttribute('id', id.replace(/_\d+$/, `_${itemCount}`));
+      }
     });
 
-    // Append the new item to the container
+    newItem.querySelectorAll('label').forEach((label) => {
+      const forAttr = label.getAttribute('for');
+      if (forAttr) {
+        label.setAttribute('for', forAttr.replace(/_\d+$/, `_${itemCount}`));
+      }
+    });
+
     itemContainer.appendChild(newItem);
   }
 </script>
-
-</form>

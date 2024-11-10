@@ -1,10 +1,9 @@
 <h1>Create a Tier List | Add Item Categories</h1>
 
-<form action="/create_field" method="post">
-
+<%= form_with url: create_field_path, method: :post, local: true do |form| %>
   <div>
-    <label for="name_field">Tier List Name</label>
-    <input id="name_field" type="text" name="the_name">
+    <%= form.label :the_name, "Tier List Name" %>
+    <%= form.text_field :the_name, id: "name_field" %>
   </div>
 
   <h4>Columns already included for each item</h4>
@@ -22,78 +21,49 @@
       <fieldset>
         <legend><h3>Field 1</h3></legend>
         <div>
-          <input id="field_1" type="text" name="field1_name" placeholder="Enter name">
-          <select name="field1_datatype">
-            <option value="" selected disabled>Select Data Type</option>
-            <option value="Text">Text</option>
-            <option value="Number">Number</option>
-            <option value="Date">Date</option>
-          </select>
+          <%= form.text_field :field1_name, placeholder: "Enter name", id: "field_1" %>
+          <%= form.select :field1_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
         </div>
       </fieldset>
     </div>
 
     <!-- Repeat similar structure for Fields 2 to 5 -->
-
     <div class="field">
       <fieldset>
         <legend><h3>Field 2</h3></legend>
         <div>
-          <input id="field_2" type="text" name="field2_name" placeholder="Enter name">
-          <select name="field2_datatype">
-            <option value="" selected disabled>Select Data Type</option>
-            <option value="Text">Text</option>
-            <option value="Number">Number</option>
-            <option value="Date">Date</option>
-          </select>
+          <%= form.text_field :field2_name, placeholder: "Enter name", id: "field_2" %>
+          <%= form.select :field2_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
         </div>
       </fieldset>
     </div>
 
-    <!-- Field 3 -->
     <div class="field">
       <fieldset>
         <legend><h3>Field 3</h3></legend>
         <div>
-          <input id="field_3" type="text" name="field3_name" placeholder="Enter name">
-          <select name="field3_datatype">
-            <option value="" selected disabled>Select Data Type</option>
-            <option value="Text">Text</option>
-            <option value="Number">Number</option>
-            <option value="Date">Date</option>
-          </select>
+          <%= form.text_field :field3_name, placeholder: "Enter name", id: "field_3" %>
+          <%= form.select :field3_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
         </div>
       </fieldset>
     </div>
 
-    <!-- Field 4 -->
     <div class="field">
       <fieldset>
         <legend><h3>Field 4</h3></legend>
         <div>
-          <input id="field_4" type="text" name="field4_name" placeholder="Enter name">
-          <select name="field4_datatype">
-            <option value="" selected disabled>Select Data Type</option>
-            <option value="Text">Text</option>
-            <option value="Number">Number</option>
-            <option value="Date">Date</option>
-          </select>
+          <%= form.text_field :field4_name, placeholder: "Enter name", id: "field_4" %>
+          <%= form.select :field4_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
         </div>
       </fieldset>
     </div>
 
-    <!-- Field 5 -->
     <div class="field">
       <fieldset>
         <legend><h3>Field 5</h3></legend>
         <div>
-          <input id="field_5" type="text" name="field5_name" placeholder="Enter name">
-          <select name="field5_datatype">
-            <option value="" selected disabled>Select Data Type</option>
-            <option value="Text">Text</option>
-            <option value="Number">Number</option>
-            <option value="Date">Date</option>
-          </select>
+          <%= form.text_field :field5_name, placeholder: "Enter name", id: "field_5" %>
+          <%= form.select :field5_datatype, [["Select Data Type", ""], ["Text", "Text"], ["Number", "Number"], ["Date", "Date"]], { selected: "" } %>
         </div>
       </fieldset>
     </div>
@@ -104,67 +74,41 @@
   <p id="error-message" style="color: red;"></p>
 
   <!-- Submit Button -->
-  <button type="submit">Submit</button>
-</form>
+  <%= form.submit "Submit" %>
+<% end %>
 
 <script>
   let fieldCount = 6; // Initial count, assuming fields 1 to 5 exist
 
   function addField() {
-    // Check if fieldCount has reached the maximum limit of 10
     if (fieldCount > 10) {
       document.getElementById("error-message").textContent = "You can only add up to 10 fields.";
-      return; // Stop further execution if the limit is reached
+      return;
     }
 
-    // Select the container where new fields will be added
     const fieldsContainer = document.getElementById('fields-container');
-
-    // Select the first item as a template and clone it
     const templateField = document.querySelector('.field');
     
     if (!templateField) {
       console.error("Template field with class 'field' not found.");
-      return; // Exit the function if the template is missing
+      return;
     }
     
     const newField = templateField.cloneNode(true);
-
-    // Update the legend with the new field number
     const legend = newField.querySelector('legend h3');
-    if (legend) {
-      legend.textContent = `Field ${fieldCount}`;
-    } else {
-      console.error("Legend h3 element not found in the cloned field.");
-      return;
-    }
+    legend.textContent = `Field ${fieldCount}`;
 
-    // Reset the input ID, name, and placeholder
     const input = newField.querySelector('input[type="text"]');
-    if (input) {
-      input.id = `field_${fieldCount}`;
-      input.name = `field${fieldCount}_name`;
-      input.placeholder = "Enter name";
-      input.value = ""; // Clear the input value for the new field
-    } else {
-      console.error("Input element not found in the cloned field.");
-      return;
-    }
+    input.id = `field_${fieldCount}`;
+    input.name = `field${fieldCount}_name`;
+    input.placeholder = "Enter name";
+    input.value = "";
 
-    // Update the select field's name and reset selected value
     const select = newField.querySelector('select');
-    if (select) {
-      select.name = `field${fieldCount}_datatype`;
-      select.selectedIndex = 0; // Reset the selection to the placeholder
-    } else {
-      console.error("Select element not found in the cloned field.");
-      return;
-    }
+    select.name = `field${fieldCount}_datatype`;
+    select.selectedIndex = 0;
 
-    // Append the new field to the container
     fieldsContainer.appendChild(newField);
-
-    // Increment fieldCount for the next added field
     fieldCount++;
   }
 </script>

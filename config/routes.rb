@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get("/add_items", { :controller => "create_tls", :action => "add_items"})
   post("/submit_tl", { :controller => "create_tls", :action => "submit_tl" })
 
+  resources :fields, only: [:new, :create]
+  resources :items, only: [:new, :create, :show]
+
   # Fill in Tier Lists
   get("/rank_items", { :controller => "rank_tls", :action => "rank"})
 
