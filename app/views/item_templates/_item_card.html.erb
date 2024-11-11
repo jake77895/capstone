@@ -2,9 +2,13 @@
 <% if current_item %>
   <div class="item-card">
     <div class="item-card-content">
-      <h3><%= current_item.name %></h3>
+      <% if current_item.image.attached? %>
+        <%= image_tag current_item.image, alt: "#{current_item.name} image", style: "width: 100%;" %>
+      <% else %>
+        <p>No image available</p>
+      <% end %>
+      <h3><%= current_item.name || "No name added" %></h3>
       <p><%= current_item.description || "No description available" %></p>
-      <img src="path/to/image.jpg" alt="Item image" style="width: 100%;">
     </div>
   </div>
 

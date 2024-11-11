@@ -30,7 +30,7 @@ class ItemsController < ApplicationController
   private
 
   def item_params
-    # Permit name, description, and custom_fields (as a hash)
-    params.require(:item).permit(:name, :description, custom_fields: {})
+    # Permit name, description, image, and custom_fields (as a hash)
+    params.require(:item).permit(:name, :description, :image, custom_fields: {})
   end
 end

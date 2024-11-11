@@ -29,7 +29,7 @@
 <% end %>
 
 
-<%= form_with url: submit_tl_path, method: :post, local: true do |form| %>
+<%= form_with url: submit_tl_path, method: :post, local: true, multipart: true do |form| %>
   <div id="item-container">
     <!-- Item Fields -->
     <div class="item">
@@ -46,6 +46,12 @@
         <div>
           <%= form.label :description, "Description" %>
           <%= form.text_area :description, rows: 4, cols: 50, name: "item[description]" %> <!-- Grouped under item -->
+        </div>
+
+        <!-- Image upload field -->
+        <div>
+          <%= form.label :image, "Upload Image" %>
+          <%= form.file_field :image %>
         </div>
 
         <!-- Custom Fields Section -->
