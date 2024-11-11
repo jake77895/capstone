@@ -32,27 +32,28 @@
 <%= form_with url: submit_tl_path, method: :post, local: true, multipart: true do |form| %>
   <div id="item-container">
     <!-- Item Fields -->
-    <div class="item">
-      <fieldset>
-        <legend><h3>Item 1</h3></legend>
+    <div class="item" data-index="0">
+    <fieldset>
+      <legend><h3>Item 1</h3></legend>
 
-        <!-- Standard item name field -->
-        <div>
-          <%= form.label :name, "Name of item" %>
-          <%= form.text_field :name, name: "item[name]" %> <!-- Grouped under item -->
-        </div>
+      <!-- Standard item name field -->
+      <div>
+        <label for="items_0_name">Name of item</label>
+        <input type="text" name="items[0][name]" id="items_0_name">
+      </div>
 
-        <!-- Standard item description field -->
-        <div>
-          <%= form.label :description, "Description" %>
-          <%= form.text_area :description, rows: 4, cols: 50, name: "item[description]" %> <!-- Grouped under item -->
-        </div>
+      <!-- Standard item description field -->
+      <div>
+        <label for="items_0_description">Description</label>
+        <textarea name="items[0][description]" id="items_0_description" rows="4" cols="50"></textarea>
+      </div>
 
-        <!-- Image upload field -->
-        <div>
-          <%= form.label :image, "Upload Image" %>
-          <%= form.file_field :image, name: "item[image]" %>
-        </div>
+      <!-- Image upload field -->
+      <div>
+        <label for="items_0_image">Upload Image</label>
+        <input type="file" name="items[0][image]" id="items_0_image">
+      </div>
+    </fieldset>
         
         <!-- Custom Fields Section -->
         <% if @fields.present? %>
@@ -60,26 +61,25 @@
           <% @fields.each_with_index do |field, i| %>
             <div>
               <!-- Label for custom field -->
-              <label for="custom_fields_<%= i %>_value">
+              <label for="items_0_custom_fields_<%= i %>">
                 <%= field[:name].present? ? field[:name].capitalize : "Unnamed Field" %>
               </label>
 
               <!-- Input field based on the datatype -->
               <% case field[:datatype] %>
               <% when "text" %>
-                <input type="text" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
+                <input type="text" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
               <% when "number" %>
-                <input type="number" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
+                <input type="number" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
               <% when "date" %>
-                <input type="date" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
+                <input type="date" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
               <% else %>
-                <input type="text" name="item[custom_fields][<%= field[:name] %>]" id="custom_fields_<%= i %>_value">
+                <input type="text" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
               <% end %>
-
-              <!-- We do not need a hidden field here, as the name structure already groups values correctly -->
             </div>
           <% end %>
         <% end %>
+        
       </fieldset>
     </div>
   </div>
@@ -91,33 +91,59 @@
 
 
 <script>
-  let itemCount = 1; // Track the number of items
+let itemCount = 0; // Start at 0 if the first item is already in place
 
-  function addItem() {
-    itemCount++;
-    const itemContainer = document.getElementById('item-container');
-    const templateItem = document.querySelector('.item');
+function addItem() {
+  // Increment the item counter
+  itemCount++;
 
-    if (!templateItem) {
-      console.error("Template item with class 'item' not found.");
-      return;
+  // Get the container where new items will be appended
+  const itemContainer = document.getElementById('item-container');
+  
+  // Find the first item in the container to use as a template
+  const templateItem = document.querySelector('.item');
+
+  if (!templateItem) {
+    console.error("Template item with class 'item' not found.");
+    return;
+  }
+
+  // Clone the template item to create a new item
+  const newItem = templateItem.cloneNode(true);
+
+  // Update the new item's legend with the correct number
+  newItem.querySelector('legend h3').textContent = `Item ${itemCount + 1}`;
+
+  // Update input names and IDs to include the new index to avoid conflicts
+  newItem.querySelectorAll('input, textarea').forEach((input) => {
+    input.value = ''; // Clear the input value for the cloned item
+
+    // Update the name attribute to have the correct index
+    let name = input.getAttribute('name');
+    if (name) {
+      name = name.replace(/\[\d+\]/, `[${itemCount}]`);
+      input.setAttribute('name', name);
     }
 
-    const newItem = templateItem.cloneNode(true);
+    // Update the id attribute to have the correct index
+    let id = input.getAttribute('id');
+    if (id) {
+      id = id.replace(/_\d+_/, `_${itemCount}_`);
+      input.setAttribute('id', id);
 
-    // Update the new item’s legend and input names
-    newItem.querySelector('legend h3').textContent = `Item ${itemCount}`;
-    newItem.querySelectorAll('input, textarea').forEach((input) => {
-      input.value = ''; // Clear the input value for the cloned item
-
-      if (input.getAttribute('name')) {
-        input.setAttribute('name', input.getAttribute('name').replace(/\[\d*\]/, `[]`));
+      // Update the label `for` attribute to match the new ID
+      const label = newItem.querySelector(`label[for="${input.getAttribute('id')}"]`);
+      if (label) {
+        label.setAttribute('for', id);
       }
-      if (input.getAttribute('id')) {
-        input.setAttribute('id', input.getAttribute('id').replace(/_\d+_/, `_${itemCount}_`));
-      }
-    });
+    }
+  });
 
-    itemContainer.appendChild(newItem);
-  }
+  // Append the new item to the container
+  itemContainer.appendChild(newItem);
+}
+
+
+
+  
 </script>

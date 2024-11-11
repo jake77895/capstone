@@ -1,30 +1,22 @@
 class CreateTlsController < ApplicationController
   
   def submit_tl
-    # Log the entire params hash for inspection
-    puts "Params received: #{params.inspect}"
+      # Access the values directly to get an array of item parameters
+      items = params[:items].values || []
 
-    # Check if params[:item] exists and log it
-    if params[:item].present?
-      puts "Params for item: #{params[:item].inspect}"
-    else
-      puts "No item data found in params"
-    end
+      @items = items.map do |item_params|
+        # Permit parameters for each item
+        Item.new(item_params.permit(:name, :description, :image, custom_fields: {}))
+      end
 
-    # Initialize the item with item_params (using strong parameters)
-    @item = Item.new(item_params)
-    
-    # Log the @item object to verify initialization
-    puts "Item object initialized: #{@item.inspect}"
+      # Save all items if they are valid
+      if @items.all?(&:save)
+        reset_session
+        redirect_to rank_items_path, notice: 'Tier List items were successfully created.'
+      else
+        render :new
+      end
 
-    # Attempt to save the item and log success or failure
-    if @item.save
-      # After saving, redirect or render as needed
-      redirect_to rank_items_path, notice: "Item created successfully!"
-    else
-      puts "Error saving item: #{@item.errors.full_messages.inspect}"
-      render :new, alert: "Error saving item"
-    end
   end
 
   def item_params

@@ -17,20 +17,28 @@ class ItemsController < ApplicationController
     @item = Item.new
   end
 
+  
   def create
-    @item = Item.new(item_params)
-
-    if @item.save
-      redirect_to @item, notice: "Item was successfully created."
+    # Extract each item from params and save it to the `items` table
+    @items = item_params.map do |item_attributes|
+      Item.new(item_attributes)
+    end
+  
+    if @items.all?(&:save)
+      redirect_to items_path, notice: 'Items were successfully created.'
     else
       render :new
     end
+ 
+
   end
 
   private
 
   def item_params
-    # Permit name, description, image, and custom_fields (as a hash)
-    params.require(:item).permit(:name, :description, :image, custom_fields: {})
+      # Permit each item in the array to have the specified attributes
+    params.require(:items).map do |item|
+      item.permit(:name, :description, :image, custom_fields: {})
+    end
   end
 end

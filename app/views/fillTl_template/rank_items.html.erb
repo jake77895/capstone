@@ -29,9 +29,8 @@
       <!-- Add more content as needed -->
       
       <!-- Render the item card as a button -->
-      <div onclick="showPopup()" style="cursor: pointer;">
-        <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
-      </div>
+      <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
+      
 
 
     </div>

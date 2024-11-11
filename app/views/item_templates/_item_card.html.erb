@@ -1,6 +1,6 @@
 <!-- _item_card.html.erb -->
 <% if current_item %>
-  <div class="item-card">
+  <div class="item-card" onclick="showPopup()">
     <div class="item-card-content">
       <% if current_item.image.attached? %>
         <%= image_tag current_item.image, alt: "#{current_item.name} image", style: "width: 100%;" %>
