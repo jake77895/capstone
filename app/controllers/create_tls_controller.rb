@@ -19,8 +19,8 @@ class CreateTlsController < ApplicationController
 
     # Attempt to save the item and log success or failure
     if @item.save
-      puts "Item saved successfully"
-      redirect_to "/rank_items", notice: "Object created successfully"
+      # After saving, redirect or render as needed
+      redirect_to rank_items_path, notice: "Item created successfully!"
     else
       puts "Error saving item: #{@item.errors.full_messages.inspect}"
       render :new, alert: "Error saving item"
@@ -29,9 +29,7 @@ class CreateTlsController < ApplicationController
 
   def item_params
     # Use strong parameters and log the permitted params
-    permitted_params = params.require(:item).permit(:name, :description, custom_fields: {})
-    puts "Permitted params for item: #{permitted_params.inspect}"
-    permitted_params
+    params.require(:item).permit(:name, :description, :image, custom_fields: {})
   end
 
   

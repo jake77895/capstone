@@ -51,9 +51,9 @@
         <!-- Image upload field -->
         <div>
           <%= form.label :image, "Upload Image" %>
-          <%= form.file_field :image %>
+          <%= form.file_field :image, name: "item[image]" %>
         </div>
-
+        
         <!-- Custom Fields Section -->
         <% if @fields.present? %>
           <h4>Custom Fields</h4>
