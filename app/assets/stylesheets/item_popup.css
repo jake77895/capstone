@@ -1,0 +1,126 @@
+/* ******************************************* */
+/* ITEM POP UP */
+
+/* popup.css */
+
+/* Overlay that covers the full screen */
+.popup-outer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main popup content area */
+.popup-inner {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button */
+.popup-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+/* Header styling */
+.popup-header {
+  background-color: #f08a85; /* Soft red/pink background for header */
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Title in the header */
+.popup-header h1 {
+  margin: 0;
+  font-size: 1.5em;
+  flex-grow: 1;
+}
+
+/* Placeholder for icon or image */
+.popup-image-placeholder {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+/* Image and Description Section */
+.popup-image-description {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.popup-image img {
+  max-width: 100%;       /* Image won't exceed the container width */
+  max-height: 200px;     /* Sets a maximum height for the image */
+  width: auto;           /* Maintains the aspect ratio */
+  height: auto;          /* Maintains the aspect ratio */
+  object-fit: cover;     /* Crops if needed to fit within max dimensions */
+  border-radius: 8px;
+}
+
+/* Description section */
+.popup-description {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 80px;
+}
+
+/* Divider */
+.popup-divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+/* Details Section */
+.popup-details {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Individual detail box */
+.popup-detail {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Category and Prerequisites */
+.popup-category, .popup-prerequisites {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+/* Additional Fields */
+.popup-field {
+  margin-top: 10px;
+}

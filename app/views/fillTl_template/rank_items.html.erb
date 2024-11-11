@@ -16,8 +16,8 @@
 
     <button onclick="showPopup()"> Testing button</button>
 
-    <!-- Render the popup for item details -->
-    
+    <!-- Popup Partial (will be displayed on button click) -->
+    <%= render partial: "item_templates/item_popup", locals: { item: @current_item } %>
 
 
 
@@ -31,7 +31,11 @@
       <!-- Add more content as needed -->
       
       <!-- Render the item card as a button -->
-      <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
+      <div onclick="showPopup()" style="cursor: pointer;">
+        <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
+      </div>
+
+      
     </div>
 
   </div>
@@ -40,7 +44,7 @@
 
 <script>
   function showPopup() {
-    document.getElementById('popup-overlay').style.display = 'block';
+    document.getElementById('popup-overlay').style.display = 'flex';
   }
 
   function hidePopup() {

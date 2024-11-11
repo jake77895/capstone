@@ -1,0 +1,13 @@
+/* ******************************************* */
+/* ITEM CARD */
+.item-card {
+  border: 2px solid #333; /* Dark border color */
+  border-radius: 8px; /* Rounded corners */
+  padding: 16px; /* Inner padding */
+  margin: 16px 0; /* Space above and below */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.item-card-content img {
+  border-radius: 8px; /* Match border radius of card */
+}
