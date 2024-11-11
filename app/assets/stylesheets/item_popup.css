@@ -28,17 +28,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Close button */
-.popup-close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5em;
-  cursor: pointer;
-}
-
 /* Header styling */
 .popup-header {
   background-color: #f08a85; /* Soft red/pink background for header */
@@ -65,13 +54,6 @@
   border-radius: 50%;
 }
 
-/* Image and Description Section */
-.popup-image-description {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
-
 .popup-image img {
   max-width: 100%;       /* Image won't exceed the container width */
   max-height: 200px;     /* Sets a maximum height for the image */
@@ -94,33 +76,4 @@
   margin: 20px 0;
   border: none;
   border-top: 1px solid #ccc;
-}
-
-/* Details Section */
-.popup-details {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* Individual detail box */
-.popup-detail {
-  flex: 1;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 4px;
-  text-align: center;
-}
-
-/* Category and Prerequisites */
-.popup-category, .popup-prerequisites {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 10px;
-}
-
-/* Additional Fields */
-.popup-field {
-  margin-top: 10px;
 }

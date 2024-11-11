@@ -14,8 +14,6 @@
       <p>This container takes up 3/4 of the page width on larger screens and resizes dynamically on smaller screens.</p>
       <!-- Add more content as needed -->
 
-    <button onclick="showPopup()"> Testing button</button>
-
     <!-- Popup Partial (will be displayed on button click) -->
     <%= render partial: "item_templates/item_popup", locals: { item: @current_item } %>
 
@@ -35,7 +33,7 @@
         <%= render partial: "item_templates/item_card", locals: { current_item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
       </div>
 
-      
+
     </div>
 
   </div>
