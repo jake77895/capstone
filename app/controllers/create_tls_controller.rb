@@ -1,6 +1,10 @@
 class CreateTlsController < ApplicationController
   
   def submit_tl
+      # Step 1: Create the TierList
+      @tier_list = TierList.new(name: params[:tier_list_name])
+      @tier_list.save!
+    
       # Access the values directly to get an array of item parameters
       items = params[:items].values || []
 
@@ -16,6 +20,12 @@ class CreateTlsController < ApplicationController
       else
         render :new
       end
+
+      # Create an ItemRank linking the item to the tier list
+      item_rank = ItemRank.new(tier_list: @tier_list, item: item)
+      item_rank.save!
+
+      item  # Return the item for the map
 
   end
 
