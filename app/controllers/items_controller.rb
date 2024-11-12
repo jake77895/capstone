@@ -1,5 +1,12 @@
 class ItemsController < ApplicationController
   
+  def index
+    @tier_list = TierList.find(params[:tier_list_id])
+    @items = @tier_list.items # Adjust if items are related differently
+
+    # Render the index view or redirect as needed
+  end
+  
   def rank_items
     # Get all items for ranking
     @items = Item.all.order(:id) # Adjust ordering as needed
@@ -20,15 +27,15 @@ class ItemsController < ApplicationController
     end
   
     def create
-      @tier_list = TierList.find(params[:tier_list_id])
+      # Add your code for creating an item here
+      # For example:
       @item = Item.new(item_params)
+      @item.tier_list_id = params[:tier_list_id] # associate with the correct tier list if applicable
   
       if @item.save
-        # Create an entry in ItemRank to associate the item with the tier list
-        ItemRank.create(item: @item, tier_list: @tier_list)
-        redirect_to @tier_list, notice: 'Item was successfully added to the Tier List.'
+        redirect_to tier_list_path(@item.tier_list), notice: 'Item was successfully created.'
       else
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
   
