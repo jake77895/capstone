@@ -1,0 +1,63 @@
+<h1>Create a Tier List | Add Item Categories</h1>
+
+<%= form_with model: @tier_list, local: true do |form| %>
+  <div>
+    <%= form.label :name, "Tier List Name" %>
+    <%= form.text_field :name, placeholder: "Enter the name of the tier list" %>
+  </div>
+
+  <h4>Add Custom Fields for Items</h4>
+
+  <div id="fields-container">
+    <% 5.times do |i| %>
+      <div class="field">
+        <fieldset>
+          <legend><h3>Field <%= i + 1 %></h3></legend>
+          <div>
+            <%= text_field_tag "fields[#{i}][name]", nil, placeholder: "Field name" %>
+            <%= select_tag "fields[#{i}][datatype]", options_for_select([["Text", "text"], ["Number", "number"], ["Date", "date"]]), prompt: "Select Data Type" %>
+          </div>
+        </fieldset>
+      </div>
+    <% end %>
+  </div>
+
+  <%= form.submit "Create Tier List" %>
+<% end %>
+
+<button type="button" onclick="addField()">Add Another Field</button>
+<p id="error-message" style="color: red;"></p>
+
+
+<script>
+  let fieldCount = 6; // Initial count, assuming fields 1 to 5 exist
+
+  function addField() {
+    if (fieldCount > 10) {
+      document.getElementById("error-message").textContent = "You can only add up to 10 fields.";
+      return;
+    }
+
+    const fieldsContainer = document.getElementById('fields-container');
+    const newField = document.createElement('div');
+    newField.classList.add('field');
+
+    newField.innerHTML = `
+      <fieldset>
+        <legend><h3>Field ${fieldCount}</h3></legend>
+        <div>
+          <input type="text" id="field_${fieldCount}_name" name="fields[${fieldCount}][name]" placeholder="Enter name">
+          <select id="field_${fieldCount}_datatype" name="fields[${fieldCount}][datatype]">
+            <option value="">Select Data Type</option>
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="date">Date</option>
+          </select>
+        </div>
+      </fieldset>
+    `;
+
+    fieldsContainer.appendChild(newField);
+    fieldCount++;
+  }
+</script>

@@ -11,6 +11,6 @@
 #
 class Item < ApplicationRecord
   has_one_attached :image
-  has_many :item_rankings, dependent: :destroy
-  has_many :tier_lists, through: :item_rankings
+  has_many :item_ranks
+  has_many :tier_lists, through: :item_ranks
 end

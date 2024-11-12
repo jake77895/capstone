@@ -29,59 +29,50 @@
 <% end %>
 
 
-<%= form_with model: @tier_list, url: submit_tl_path, method: :post, local: true, multipart: true do |form| %>
+<%= form_with model: [@tier_list, @item], local: true, multipart: true do |form| %>
   <div id="item-container">
-    <!-- Item Fields -->
-    <div class="item" data-index="0">
     <fieldset>
-      <legend><h3>Item 1</h3></legend>
+      <legend><h3>Add Item</h3></legend>
 
-      <!-- Standard item name field -->
+      <!-- Standard item fields -->
       <div>
-        <%= form.label :name, "Name of item", for: "items_0_name" %>
-        <%= text_field_tag "items[0][name]", nil, id: "items_0_name" %>
+        <%= form.label :name, "Name of item" %>
+        <%= form.text_field :name %>
+      </div>
+      <div>
+        <%= form.label :description, "Description" %>
+        <%= form.text_area :description, rows: 4, cols: 50 %>
+      </div>
+      <div>
+        <%= form.label :image, "Upload Image" %>
+        <%= form.file_field :image %>
       </div>
 
-      <!-- Standard item description field -->
-      <div>
-        <%= form.label :description, "Description", for: "items_0_description" %>
-        <%= text_area_tag "items[0][description]", nil, id: "items_0_description", rows: 4, cols: 50 %>
-      </div>
-
-      <!-- Image upload field -->
-      <div>
-        <%= form.label :image, "Upload Image", for: "items_0_image" %>
-        <%= file_field_tag "items[0][image]", id: "items_0_image" %>
-      </div>
-    </fieldset>
-        
-    <!-- Custom Fields Section -->
-    <% if @fields.present? %>
-      <h4>Custom Fields</h4>
-      <% @fields.each_with_index do |field, i| %>
-        <div>
-          <%= form.label field[:name], field[:name].present? ? field[:name].capitalize : "Unnamed Field", for: "items_0_custom_fields_#{i}" %>
-
-          <% case field[:datatype] %>
-          <% when "text" %>
-            <%= text_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
-          <% when "number" %>
-            <%= number_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
-          <% when "date" %>
-            <%= date_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
-          <% else %>
-            <%= text_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
-          <% end %>
-        </div>
+      <!-- Custom Fields Section -->
+      <% if @tier_list.custom_fields.present? %>
+        <h4>Custom Fields</h4>
+        <% @tier_list.custom_fields.each do |field| %>
+          <div>
+            <%= form.label field["name"], field["name"].capitalize %>
+            <% case field["datatype"] %>
+            <% when "text" %>
+              <%= text_field_tag "item[custom_fields][#{field['name']}]" %>
+            <% when "number" %>
+              <%= number_field_tag "item[custom_fields][#{field['name']}]" %>
+            <% when "date" %>
+              <%= date_field_tag "item[custom_fields][#{field['name']}]" %>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
-  </fieldset>
+    </fieldset>
   </div>
 
-  <!-- Button to add another item section -->
-  <button type="button" onclick="addItem()">Add Another Item</button>
-  <%= form.submit "Create Tier List" %>
+  <%= form.submit "Add Item" %>
 <% end %>
+
+<!-- Button to add another item section -->
+<button type="button" onclick="addItem()">Add Another Item</button>
 
 
 <script>

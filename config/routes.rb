@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   get("/add_items", { :controller => "create_tls", :action => "add_items"})
   post("/submit_tl", { :controller => "create_tls", :action => "submit_tl" })
   # post "/submit_tl", to: "items#create", as: :submit_tl
+  resources :tier_lists
+
+
+
+
 
 
   resources :fields, only: [:new, :create]

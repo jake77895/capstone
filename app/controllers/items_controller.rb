@@ -13,32 +13,33 @@ class ItemsController < ApplicationController
     @previous_item_id = @items[current_index - 1]&.id if current_index > 0
   end
   
-  def new
-    @item = Item.new
-  end
-
-  
-  def create
-    # Extract each item from params and save it to the `items` table
-    @items = item_params.map do |item_attributes|
-      Item.new(item_attributes)
+  class ItemsController < ApplicationController
+    def new
+      @tier_list = TierList.find(params[:tier_list_id])
+      @item = Item.new
     end
   
-    if @items.all?(&:save)
-      redirect_to items_path, notice: 'Items were successfully created.'
-    else
-      render :new
+    def create
+      @tier_list = TierList.find(params[:tier_list_id])
+      @item = Item.new(item_params)
+  
+      if @item.save
+        # Create an entry in ItemRank to associate the item with the tier list
+        ItemRank.create(item: @item, tier_list: @tier_list)
+        redirect_to @tier_list, notice: 'Item was successfully added to the Tier List.'
+      else
+        render :new
+      end
     end
- 
-
-  end
-
-  private
-
-  def item_params
-      # Permit each item in the array to have the specified attributes
-    params.require(:items).map do |item|
-      item.permit(:name, :description, :image, custom_fields: {})
+  
+    private
+  
+    def item_params
+      # Permit standard item attributes and custom fields
+      params.require(:item).permit(:name, :description, :image, custom_fields: @tier_list.custom_fields.map { |field| field['name'] })
     end
   end
+  
+
+  
 end

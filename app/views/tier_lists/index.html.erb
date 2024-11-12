@@ -1,0 +1,10 @@
+<h1>All Tier Lists</h1>
+
+<% @tier_lists.each do |tier_list| %>
+  <div>
+    <h2><%= link_to tier_list.name, tier_list_path(tier_list) %></h2>
+    <p><%= tier_list.short_description %></p>
+  </div>
+<% end %>
+
+<%= link_to "Create a New Tier List", new_tier_list_path %>

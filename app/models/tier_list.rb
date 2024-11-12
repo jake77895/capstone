@@ -14,7 +14,9 @@
 #  index_tier_lists_on_user_id  (user_id)
 #
 class TierList < ApplicationRecord
-  has_many :item_rankings, dependent: :destroy
-  has_many :items, through: :item_rankings
+  has_many :item_ranks
+  has_many :items, through: :item_ranks
 
+  # Assuming `custom_fields` is serialized or stored as JSON
+  serialize :custom_fields, Array
 end
