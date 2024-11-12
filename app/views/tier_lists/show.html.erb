@@ -4,7 +4,7 @@
 
 <div>
   <label>Tier List Name:</label>
-  <span><%= @tl_name %></span>
+  <span><%= @tier_list.name %></span> <!-- Display the tier list name here -->
 </div>
 
 <%= debug @fields %>
@@ -21,114 +21,115 @@
   <p>Debug: @fields is empty or nil</p>
 <% end %>
 
-
-<h1>Create a Tier List | Add Items</h1>
-
-<% if @tl_name.present? %>
-  <p>Tier List Name: <%= @tl_name %></p>
-<% end %>
-
-
 <%= form_with model: [@tier_list, @item], local: true, multipart: true do |form| %>
   <div id="item-container">
-    <fieldset>
-      <legend><h3>Add Item</h3></legend>
+    <!-- Render five item fields initially -->
+    <% 5.times do |index| %>
+      <div class="item">
+        <fieldset>
+          <legend><h3>Item <%= index + 1 %></h3></legend>
 
-      <!-- Standard item fields -->
-      <div>
-        <%= form.label :name, "Name of item" %>
-        <%= form.text_field :name %>
-      </div>
-      <div>
-        <%= form.label :description, "Description" %>
-        <%= form.text_area :description, rows: 4, cols: 50 %>
-      </div>
-      <div>
-        <%= form.label :image, "Upload Image" %>
-        <%= form.file_field :image %>
-      </div>
-
-      <!-- Custom Fields Section -->
-      <% if @tier_list.custom_fields.present? %>
-        <h4>Custom Fields</h4>
-        <% @tier_list.custom_fields.each do |field| %>
+          <!-- Standard item fields -->
           <div>
-            <%= form.label field["name"], field["name"].capitalize %>
-            <% case field["datatype"] %>
-            <% when "text" %>
-              <%= text_field_tag "item[custom_fields][#{field['name']}]" %>
-            <% when "number" %>
-              <%= number_field_tag "item[custom_fields][#{field['name']}]" %>
-            <% when "date" %>
-              <%= date_field_tag "item[custom_fields][#{field['name']}]" %>
-            <% end %>
+            <label>Name of item</label>
+            <input type="text" name="items[<%= index %>][name]" placeholder="Item name">
           </div>
-        <% end %>
-      <% end %>
-    </fieldset>
+          <div>
+            <label>Description</label>
+            <textarea name="items[<%= index %>][description]" rows="4" cols="50" placeholder="Item description"></textarea>
+          </div>
+          <div>
+            <label>Upload Image</label>
+            <input type="file" name="items[<%= index %>][image]">
+          </div>
+
+ <!-- Custom Fields Section -->
+          <% if @fields.present? %>
+            <h4>Custom Fields</h4>
+            <% @fields.each do |field| %>
+              <% if field[:name].present? %> <!-- Check if field name is present -->
+                <div>
+                  <label><%= field[:name].capitalize %></label>
+                  <% case field[:datatype] %>
+                    <% when "text" %>
+                      <input type="text" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                    <% when "number" %>
+                      <input type="number" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                    <% when "date" %>
+                      <input type="date" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                  <% end %>
+                </div>
+              <% else %>
+                <p>Test: Field name is not present</p> <!-- Output a message when the field name is not present -->
+              <% end %> <!-- End check for field name presence -->
+            <% end %>
+          <% else %>
+            <p>No custom fields available.</p>
+          <% end %>
+        </fieldset>
+      </div>
+    <% end %>
   </div>
+
+  <!-- Button to add another item section -->
+  <button type="button" onclick="addItem()">Add Another Item</button>
 
   <%= form.submit "Add Item" %>
 <% end %>
 
-<!-- Button to add another item section -->
-<button type="button" onclick="addItem()">Add Another Item</button>
-
 
 <script>
-let itemCount = 0; // Start at 0 if the first item is already in place
+  let itemCount = 5; // Start at 5 since we are initially rendering 5 items
 
-function addItem() {
-  // Increment the item counter
-  itemCount++;
+  function addItem() {
+    // Increment the item counter
+    itemCount++;
 
-  // Get the container where new items will be appended
-  const itemContainer = document.getElementById('item-container');
-  
-  // Find the first item in the container to use as a template
-  const templateItem = document.querySelector('.item');
+    // Get the container where new items will be appended
+    const itemContainer = document.getElementById('item-container');
 
-  if (!templateItem) {
-    console.error("Template item with class 'item' not found.");
-    return;
+    // Custom fields are loaded directly from @tier_list.custom_fields and passed to the JS in a data attribute
+    const customFields = <%= @tier_list.custom_fields.to_json.html_safe %>;
+
+    // Generate new item HTML
+    const newItem = document.createElement('div');
+    newItem.classList.add('item');
+    newItem.innerHTML = `
+      <fieldset>
+        <legend><h3>Item ${itemCount}</h3></legend>
+
+        <!-- Standard item fields -->
+        <div>
+          <label>Name of item</label>
+          <input type="text" name="items[${itemCount - 1}][name]" placeholder="Item name">
+        </div>
+        <div>
+          <label>Description</label>
+          <textarea name="items[${itemCount - 1}][description]" rows="4" cols="50" placeholder="Item description"></textarea>
+        </div>
+        <div>
+          <label>Upload Image</label>
+          <input type="file" name="items[${itemCount - 1}][image]">
+        </div>
+        <h4>Custom Fields</h4>
+        ${customFields.map(field => {
+          if (!field.name) return ''; // Skip if the field name is blank
+
+          const inputType = field.datatype === 'text' ? 'text'
+                          : field.datatype === 'number' ? 'number'
+                          : field.datatype === 'date' ? 'date' : 'text';
+
+          return `
+            <div>
+              <label>${field.name.charAt(0).toUpperCase() + field.name.slice(1)}</label>
+              <input type="${inputType}" name="items[${itemCount - 1}][custom_fields][${field.name}]">
+            </div>
+          `;
+        }).join('')}
+      </fieldset>
+    `;
+
+    // Append the new item to the container
+    itemContainer.appendChild(newItem);
   }
-
-  // Clone the template item to create a new item
-  const newItem = templateItem.cloneNode(true);
-
-  // Update the new item's legend with the correct number
-  newItem.querySelector('legend h3').textContent = `Item ${itemCount + 1}`;
-
-  // Update input names and IDs to include the new index to avoid conflicts
-  newItem.querySelectorAll('input, textarea').forEach((input) => {
-    input.value = ''; // Clear the input value for the cloned item
-
-    // Update the name attribute to have the correct index
-    let name = input.getAttribute('name');
-    if (name) {
-      name = name.replace(/\[\d+\]/, `[${itemCount}]`);
-      input.setAttribute('name', name);
-    }
-
-    // Update the id attribute to have the correct index
-    let id = input.getAttribute('id');
-    if (id) {
-      id = id.replace(/_\d+_/, `_${itemCount}_`);
-      input.setAttribute('id', id);
-
-      // Update the label `for` attribute to match the new ID
-      const label = newItem.querySelector(`label[for="${input.getAttribute('id')}"]`);
-      if (label) {
-        label.setAttribute('for', id);
-      }
-    }
-  });
-
-  // Append the new item to the container
-  itemContainer.appendChild(newItem);
-}
-
-
-
-  
 </script>

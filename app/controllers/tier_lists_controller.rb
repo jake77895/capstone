@@ -13,11 +13,11 @@ class TierListsController < ApplicationController
     # Assign a default value for user_id
     @tier_list.user_id = 1  # Temporary placeholder value until users are implemented
     
-    # Process custom fields from user input and store them in the TierList
-    @tier_list.custom_fields = extract_custom_fields(params)
+      # Store custom fields in the JSON column
+      @tier_list.custom_fields = extract_custom_fields(params)
 
     if @tier_list.save
-      redirect_to add_items_path, notice: 'Tier List was successfully created with custom fields.'
+      redirect_to tier_list_path(@tier_list), notice: 'Tier List was successfully created with custom fields.'
     else
       render :new
     end
@@ -25,6 +25,8 @@ class TierListsController < ApplicationController
 
   def show
     @tier_list = TierList.find(params[:id])
+    @fields = @tier_list.custom_fields.presence || []
+    @item = Item.new  # Initialize a new item for the form
   end
 
   private
@@ -34,12 +36,13 @@ class TierListsController < ApplicationController
   end
 
   def extract_custom_fields(params)
-    # Collect custom field data from params and return as an array of hashes
+    # Collect custom field data from params and filter out fields with empty names
     params[:fields].values.map do |field|
+      next if field[:name].blank? # Skip this field if the name is blank
       {
         name: field[:name],
         datatype: field[:datatype]
       }
-    end
+    end.compact # Remove any `nil` entries from the array
   end
 end
