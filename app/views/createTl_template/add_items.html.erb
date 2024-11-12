@@ -29,7 +29,7 @@
 <% end %>
 
 
-<%= form_with url: submit_tl_path, method: :post, local: true, multipart: true do |form| %>
+<%= form_with model: @tier_list, url: submit_tl_path, method: :post, local: true, multipart: true do |form| %>
   <div id="item-container">
     <!-- Item Fields -->
     <div class="item" data-index="0">
@@ -38,50 +38,44 @@
 
       <!-- Standard item name field -->
       <div>
-        <label for="items_0_name">Name of item</label>
-        <input type="text" name="items[0][name]" id="items_0_name">
+        <%= form.label :name, "Name of item", for: "items_0_name" %>
+        <%= text_field_tag "items[0][name]", nil, id: "items_0_name" %>
       </div>
 
       <!-- Standard item description field -->
       <div>
-        <label for="items_0_description">Description</label>
-        <textarea name="items[0][description]" id="items_0_description" rows="4" cols="50"></textarea>
+        <%= form.label :description, "Description", for: "items_0_description" %>
+        <%= text_area_tag "items[0][description]", nil, id: "items_0_description", rows: 4, cols: 50 %>
       </div>
 
       <!-- Image upload field -->
       <div>
-        <label for="items_0_image">Upload Image</label>
-        <input type="file" name="items[0][image]" id="items_0_image">
+        <%= form.label :image, "Upload Image", for: "items_0_image" %>
+        <%= file_field_tag "items[0][image]", id: "items_0_image" %>
       </div>
     </fieldset>
         
-        <!-- Custom Fields Section -->
-        <% if @fields.present? %>
-          <h4>Custom Fields</h4>
-          <% @fields.each_with_index do |field, i| %>
-            <div>
-              <!-- Label for custom field -->
-              <label for="items_0_custom_fields_<%= i %>">
-                <%= field[:name].present? ? field[:name].capitalize : "Unnamed Field" %>
-              </label>
+    <!-- Custom Fields Section -->
+    <% if @fields.present? %>
+      <h4>Custom Fields</h4>
+      <% @fields.each_with_index do |field, i| %>
+        <div>
+          <%= form.label field[:name], field[:name].present? ? field[:name].capitalize : "Unnamed Field", for: "items_0_custom_fields_#{i}" %>
 
-              <!-- Input field based on the datatype -->
-              <% case field[:datatype] %>
-              <% when "text" %>
-                <input type="text" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
-              <% when "number" %>
-                <input type="number" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
-              <% when "date" %>
-                <input type="date" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
-              <% else %>
-                <input type="text" name="items[0][custom_fields][<%= field[:name] %>]" id="items_0_custom_fields_<%= i %>">
-              <% end %>
-            </div>
+          <% case field[:datatype] %>
+          <% when "text" %>
+            <%= text_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
+          <% when "number" %>
+            <%= number_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
+          <% when "date" %>
+            <%= date_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
+          <% else %>
+            <%= text_field_tag "items[0][custom_fields][#{field[:name]}]", nil, id: "items_0_custom_fields_#{i}" %>
           <% end %>
-        <% end %>
-        
-      </fieldset>
-    </div>
+        </div>
+      <% end %>
+    <% end %>
+  </fieldset>
   </div>
 
   <!-- Button to add another item section -->

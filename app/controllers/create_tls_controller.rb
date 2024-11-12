@@ -1,32 +1,31 @@
 class CreateTlsController < ApplicationController
   
   def submit_tl
+    ActiveRecord::Base.transaction do
       # Step 1: Create the TierList
-      @tier_list = TierList.new(name: params[:tier_list_name])
+      @tier_list = TierList.new(name: params[:tier_list][:name])
       @tier_list.save!
-    
-      # Access the values directly to get an array of item parameters
-      items = params[:items].values || []
-
+  
+      # Access items within the `tier_list` params
+      items = params[:tier_list][:items].values || []
+  
       @items = items.map do |item_params|
-        # Permit parameters for each item
-        Item.new(item_params.permit(:name, :description, :image, custom_fields: {}))
+        # Create each item and save it
+        item = Item.new(item_params.permit(:name, :description, :image, custom_fields: {}))
+        item.save!
+  
+        # Create an ItemRank linking the item to the tier list
+        ItemRank.create!(tier_list: @tier_list, item: item)
+  
+        item
       end
-
-      # Save all items if they are valid
-      if @items.all?(&:save)
-        reset_session
-        redirect_to rank_items_path, notice: 'Tier List items were successfully created.'
-      else
-        render :new
-      end
-
-      # Create an ItemRank linking the item to the tier list
-      item_rank = ItemRank.new(tier_list: @tier_list, item: item)
-      item_rank.save!
-
-      item  # Return the item for the map
-
+  
+      reset_session
+      redirect_to rank_items_path, notice: 'Tier List and items were successfully created and are ready for ranking.'
+    rescue ActiveRecord::RecordInvalid => e
+      flash[:alert] = "Failed to create Tier List and items: #{e.message}"
+      render :new
+    end
   end
 
   def item_params

@@ -14,7 +14,6 @@
 #  index_tier_lists_on_user_id  (user_id)
 #
 class TierList < ApplicationRecord
-  belongs_to :user
   has_many :item_rankings, dependent: :destroy
   has_many :items, through: :item_rankings
 
