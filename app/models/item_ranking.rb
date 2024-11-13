@@ -3,7 +3,7 @@
 # Table name: item_rankings
 #
 #  id           :bigint           not null, primary key
-#  ranking      :integer          not null
+#  ranking      :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  item_id      :integer          not null

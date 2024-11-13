@@ -11,6 +11,7 @@
 #
 class Item < ApplicationRecord
   has_one_attached :image
-  has_many :item_ranks
-  has_many :tier_lists, through: :item_ranks
+  has_many :item_rankings, class_name: 'ItemRanking'  # Updated here
+  has_many :tier_lists, through: :item_rankings
+  validates :name, presence: true
 end

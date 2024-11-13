@@ -21,7 +21,7 @@
   <p>Debug: @fields is empty or nil</p>
 <% end %>
 
-<%= form_with model: [@tier_list, @item], local: true, multipart: true do |form| %>
+<%= form_with model: [@tier_list, @item], local: true, multipart: true, id: "itemForm", onsubmit: "return validateItems();" do |form| %>
   <div id="item-container">
     <!-- Render five item fields initially -->
     <% 5.times do |index| %>
@@ -32,7 +32,7 @@
           <!-- Standard item fields -->
           <div>
             <label>Name of item</label>
-            <input type="text" name="items[<%= index %>][name]" placeholder="Item name">
+            <input type="text" name="items[<%= index %>][name]" placeholder="Item name" class="item-name">
           </div>
           <div>
             <label>Description</label>
@@ -43,7 +43,7 @@
             <input type="file" name="items[<%= index %>][image]">
           </div>
 
- <!-- Custom Fields Section -->
+          <!-- Custom Fields Section -->
           <% if @fields.present? %>
             <h4>Custom Fields</h4>
             <% @fields.each do |field| %>
@@ -51,12 +51,12 @@
                 <div>
                   <label><%= field[:name].capitalize %></label>
                   <% case field[:datatype] %>
-                    <% when "text" %>
-                      <input type="text" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                    <% when "text", nil, "" %>
+                      <input type="text" name="items[<%= index %>][custom_fields][<%= field[:name] %>]" value="<%= params.dig(:items, index.to_s, :custom_fields, field[:name]) %>">
                     <% when "number" %>
-                      <input type="number" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                      <input type="number" name="items[<%= index %>][custom_fields][<%= field[:name] %>]" value="<%= params.dig(:items, index.to_s, :custom_fields, field[:name]) %>">
                     <% when "date" %>
-                      <input type="date" name="items[<%= index %>][custom_fields][<%= field['name'] %>]">
+                      <input type="date" name="items[<%= index %>][custom_fields][<%= field[:name] %>]" value="<%= params.dig(:items, index.to_s, :custom_fields, field[:name]) %>">
                   <% end %>
                 </div>
               <% else %>
@@ -65,16 +65,18 @@
             <% end %>
           <% else %>
             <p>No custom fields available.</p>
-          <% end %>
+          <% end %> <!-- End check for custom fields presence -->
+
         </fieldset>
       </div>
     <% end %>
-  </div>
+  </div> <!-- End of item-container -->
 
   <!-- Button to add another item section -->
   <button type="button" onclick="addItem()">Add Another Item</button>
 
   <%= form.submit "Add Item" %>
+  <p id="error-message" style="color: red; display: none;">Please fill in the name for each item before submitting.</p>
 <% end %>
 
 
@@ -132,4 +134,28 @@
     // Append the new item to the container
     itemContainer.appendChild(newItem);
   }
+
+  function validateItems() {
+  const itemNames = document.querySelectorAll('.item-name');
+  const errorMessage = document.getElementById('error-message');
+  let isValid = true;
+
+  // Check if any item name field is empty
+  itemNames.forEach(input => {
+    if (input.value.trim() === '') {
+      isValid = false;
+    }
+  });
+
+  // Show or hide error message based on validation result
+  if (!isValid) {
+    errorMessage.style.display = 'block';
+  } else {
+    errorMessage.style.display = 'none';
+  }
+
+  // Prevent form submission if validation fails
+  return isValid;
+}
+
 </script>

@@ -1,10 +1,16 @@
 class ItemsController < ApplicationController
+  before_action :set_tier_list, only: [:create]
+
+  def set_tier_list
+    @tier_list = TierList.find(params[:tier_list_id])
+  end
   
   def index
     @tier_list = TierList.find(params[:tier_list_id])
     @items = @tier_list.items # Adjust if items are related differently
 
     # Render the index view or redirect as needed
+    render :index
   end
   
   def rank_items
@@ -20,32 +26,52 @@ class ItemsController < ApplicationController
     @previous_item_id = @items[current_index - 1]&.id if current_index > 0
   end
   
-  class ItemsController < ApplicationController
-    def new
-      @tier_list = TierList.find(params[:tier_list_id])
-      @item = Item.new
-    end
+  def new
+    @tier_list = TierList.find(params[:tier_list_id])
+    @item = Item.new
+  end
   
-    def create
-      # Add your code for creating an item here
-      # For example:
-      @item = Item.new(item_params)
-      @item.tier_list_id = params[:tier_list_id] # associate with the correct tier list if applicable
+  def create
+    @tier_list = TierList.find(params[:tier_list_id])
+    
+    # Get the item data and process each item
+    items_data = item_params || []
+    Rails.logger.info("Received items_data: #{items_data.inspect}")
+  
+    items_data.each do |item_data|
+      # Skip any item without a name
+      next if item_data[:name].blank?
+  
+      # Ensure custom_fields is a hash
+      custom_fields_data = item_data[:custom_fields].is_a?(Hash) ? item_data[:custom_fields] : item_data[:custom_fields].to_h
+      Rails.logger.info("Custom fields for this item: #{custom_fields_data.inspect}")
+  
+      # Create the item with associated tier_list and custom_fields
+      @item = @tier_list.items.build(
+        name: item_data[:name],
+        description: item_data[:description],
+        custom_fields: custom_fields_data # Assign custom fields here
+      )
   
       if @item.save
-        redirect_to tier_list_path(@item.tier_list), notice: 'Item was successfully created.'
+        ItemRanking.create(tier_list: @tier_list, item: @item)
       else
-        render :new, status: :unprocessable_entity
+        render :new and return
       end
     end
   
-    private
-  
-    def item_params
-      # Permit standard item attributes and custom fields
-      params.require(:item).permit(:name, :description, :image, custom_fields: @tier_list.custom_fields.map { |field| field['name'] })
+    redirect_to tier_list_items_path(@tier_list)
+  end
+
+  private
+
+  def item_params
+    params.require(:items).to_unsafe_h.map do |_, item|
+      ActionController::Parameters.new(item).permit(:name, :description, :image, custom_fields: {}).to_h
     end
   end
+  
+
   
 
   
