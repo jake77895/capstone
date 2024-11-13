@@ -1,14 +1,14 @@
 <!-- _item_card.html.erb -->
-<% if current_item %>
+<% if item %>
   <div class="item-card" onclick="showPopup()">
     <div class="item-card-content">
-      <% if current_item.image.attached? %>
-        <%= image_tag current_item.image, alt: "#{current_item.name} image", style: "width: 100%;" %>
+      <% if item.image.attached? %>
+        <%= image_tag item.image, alt: "#{item.name} image", style: "width: 100%;" %>
       <% else %>
         <p>No image available</p>
       <% end %>
-      <h3><%= current_item.name || "No name added" %></h3>
-      <p><%= current_item.description || "No description available" %></p>
+      <h3><%= item.name || "No name added" %></h3>
+      <p><%= item.description || "No description available" %></p>
     </div>
   </div>
 

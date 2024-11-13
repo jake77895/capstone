@@ -10,12 +10,12 @@
 
     <!-- Main Container: -->
     <div style="flex: 3 1 60%; padding: 20px; box-sizing: border-box;">
-      <h1>Tier List Displayed</h1>
+      <h1><%= @tier_list.name.capitalize %></h1>
       <p>This container takes up 3/4 of the page width on larger screens and resizes dynamically on smaller screens.</p>
       <!-- Add more content as needed -->
 
     <!-- Popup Partial (will be displayed on button click) -->
-    <%#= render partial: "item_templates/item_popup", locals: { item: @current_item } %>
+    <%= render partial: "items/item_popup", locals: { item: @current_item } %>
 
 
 
@@ -29,7 +29,8 @@
       <!-- Add more content as needed -->
       
       <!-- Render the item card as a button -->
-      <%= render 'item_card', current_item: @item, previous_item_id: @previous_item_id, next_item_id: @next_item_id %>
+      <%= render partial: "items/item_card", locals: { item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
+
       
 
 
