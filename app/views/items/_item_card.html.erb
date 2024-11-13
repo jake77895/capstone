@@ -15,10 +15,10 @@
   <!-- Navigation buttons -->
   <div class="navigation">
     <% if previous_item_id %>
-      <%= link_to "Previous Item", rank_items_path(current_item_id: previous_item_id), class: "btn" %>
+      <%= link_to "Previous Item", tier_list_items_path(@tier_list, current_item_id: previous_item_id), class: "btn" %>
     <% end %>
     <% if next_item_id %>
-      <%= link_to "Next Item", rank_items_path(current_item_id: next_item_id), class: "btn" %>
+      <%= link_to "Next Item", tier_list_items_path(@tier_list, current_item_id: next_item_id), class: "btn" %>
     <% end %>
   </div>
 <% else %>

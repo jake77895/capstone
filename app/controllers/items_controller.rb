@@ -8,6 +8,12 @@ class ItemsController < ApplicationController
   def index
     @tier_list = TierList.find(params[:tier_list_id])
     @items = @tier_list.items # Adjust if items are related differently
+    @item = @tier_list.items.first # or set to the item you want to display
+
+    @current_item = @items.find_by(id: params[:current_item_id]) || @items.first
+    @previous_item_id = @items.where("items.id < ?", @current_item.id).last&.id
+    @next_item_id = @items.where("items.id > ?", @current_item.id).first&.id
+
 
     # Render the index view or redirect as needed
     render :index
