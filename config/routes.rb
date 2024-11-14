@@ -19,6 +19,10 @@ Rails.application.routes.draw do
     resources :item_ranks, only: [:edit, :update] # For updating ranks and other details
   end
 
+  patch 'tier_lists/:tier_list_id/items/:item_id/ranking', to: 'item_rankings#update', as: :update_item_ranking
+
+
+
 
 
 

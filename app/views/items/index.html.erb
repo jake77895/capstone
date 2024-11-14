@@ -14,6 +14,59 @@
       <p>This container takes up 3/4 of the page width on larger screens and resizes dynamically on smaller screens.</p>
       <!-- Add more content as needed -->
 
+    <!-- Tier List Container -->
+    <div class="tier-list">
+
+      <!-- S Tier -->
+      <div class="tier-row">
+          <div class="tier-label">S</div>
+          <div class="tier-items" id="tier-s">
+              <!-- Items for S tier will go here -->
+          </div>
+      </div>
+
+      <!-- A Tier -->
+      <div class="tier-row">
+          <div class="tier-label">A</div>
+          <div class="tier-items" id="tier-a">
+              <!-- Items for A tier will go here -->
+          </div>
+      </div>
+
+      <!-- B Tier -->
+      <div class="tier-row">
+          <div class="tier-label">B</div>
+          <div class="tier-items" id="tier-b">
+              <!-- Items for B tier will go here -->
+          </div>
+      </div>
+
+      <!-- C Tier -->
+      <div class="tier-row">
+          <div class="tier-label">C</div>
+          <div class="tier-items" id="tier-c">
+              <!-- Items for C tier will go here -->
+          </div>
+      </div>
+
+      <!-- D Tier -->
+      <div class="tier-row">
+          <div class="tier-label">D</div>
+          <div class="tier-items" id="tier-d">
+              <!-- Items for D tier will go here -->
+          </div>
+      </div>
+
+      <!-- F Tier -->
+      <div class="tier-row">
+          <div class="tier-label">F</div>
+          <div class="tier-items" id="tier-f">
+              <!-- Items for F tier will go here -->
+          </div>
+      </div>
+      
+  </div>
+
     <!-- Popup Partial (will be displayed on button click) -->
     <%= render partial: "items/item_popup", locals: { item: @current_item } %>
 

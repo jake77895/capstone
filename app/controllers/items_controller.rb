@@ -56,9 +56,10 @@ class ItemsController < ApplicationController
       @item = @tier_list.items.build(
         name: item_data[:name],
         description: item_data[:description],
-        custom_fields: custom_fields_data # Assign custom fields here
+        custom_fields: custom_fields_data, # Assign custom fields here
+        image: item_data[:image] # Ensure image is included here
       )
-  
+
       if @item.save
         ItemRanking.create(tier_list: @tier_list, item: @item)
       else
