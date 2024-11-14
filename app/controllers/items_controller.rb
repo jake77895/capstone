@@ -1,8 +1,32 @@
 class ItemsController < ApplicationController
-  before_action :set_tier_list, only: [:create]
+  before_action :set_tier_list, only: [:create, :show, :index]
 
   def set_tier_list
     @tier_list = TierList.find(params[:tier_list_id])
+  end
+
+  def show
+    @item = @tier_list.items.find(params[:id])
+    @tier_list = TierList.find(params[:tier_list_id])
+
+    # Example logic to find previous and next item IDs (adjust as needed)
+    previous_item_id = Item.where("id < ?", @item.id).order(id: :desc).pluck(:id).first
+    next_item_id = Item.where("id > ?", @item.id).order(id: :asc).pluck(:id).first
+    
+  
+
+    respond_to do |format|
+      format.html # For standard page load
+      format.js { render partial: 'item_card', locals: { item: @item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } }
+    end
+
+    render json: {
+      name: @item.name,
+      description: @item.description,
+      image_url: @item.image.attached? ? url_for(@item.image) : nil,
+      previous_item_id: previous_item_id,
+      next_item_id: next_item_id
+    }
   end
   
   def index
@@ -81,5 +105,4 @@ class ItemsController < ApplicationController
 
   
 
-  
 end

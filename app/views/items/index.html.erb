@@ -108,6 +108,9 @@ function showPopup() {
     document.getElementById('popup-overlay').style.display = 'none';
   }
 
+</script>
+
+<script>
 
 document.addEventListener("DOMContentLoaded", () => {
   const rankSelect = document.getElementById("rank-select");
@@ -177,6 +180,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+</script>
+
+<script>
+
+function loadItem(event) {
+  event.preventDefault();
+
+  const itemId = event.target.getAttribute("data-item-id");
+  console.log("Loading item with ID:", itemId);
+
+  if (!itemId) {
+    console.error("Item ID not found on button");
+    return;
+  }
+
+  fetch(`/tier_lists/${tierListId}/items/${itemId}`, {
+    headers: {
+      "X-Requested-With": "XMLHttpRequest"
+    }
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.text();  // Expect HTML response
+    })
+    .then(html => {
+      console.log("Loaded item HTML:", html); // Debugging log
+
+      // Replace the item-card content
+      const itemCard = document.querySelector(".item-card");
+      if (itemCard) {
+        itemCard.outerHTML = html;
+        console.log("Updated item-card content successfully");
+      } else {
+        console.error("Item card not found");
+      }
+
+      // Attach event listeners again if necessary (like `showPopup`)
+    })
+    .catch(error => console.error("Error loading item:", error));
+}
+
 
 </script>
 

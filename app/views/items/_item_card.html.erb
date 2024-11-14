@@ -1,36 +1,138 @@
-  <!-- _item_card.html.erb -->
-  <% if item %>
-    <div class="item-card" onclick="showPopup()">
-      <div class="item-card-content">
-        <% if item.image.attached? %>
-          <%= image_tag item.image, alt: "#{item.name} image", style: "width: 100%;" %>
-        <% else %>
-          <p>No image available</p>
-        <% end %>
-        <h3><%= item.name || "No name added" %></h3>
-        <p><%= item.description || "No description available" %></p>
-      </div>
+<!-- _item_card.html.erb -->
+<% if item %>
+  <div class="item-card" onclick="showPopup()">
+    <div class="item-card-content">
+      <% if item.image.attached? %>
+        <%= image_tag item.image, alt: "#{item.name} image", style: "width: 100%;", id: "item-image" %>
+      <% else %>
+        <p id="no-image-text">No image available</p>
+      <% end %>
+      <h3 id="item-name"><%= item.name || "No name added" %></h3>
+      <p id="item-description"><%= item.description || "No description available" %></p>
     </div>
-
-  <!-- Navigation buttons -->
-  <div class="navigation">
-    <% if previous_item_id %>
-      <%= link_to "Previous Item", tier_list_items_path(@tier_list, current_item_id: previous_item_id), class: "btn" %>
-    <% end %>
-    <% if next_item_id %>
-      <%= link_to "Next Item", tier_list_items_path(@tier_list, current_item_id: next_item_id), class: "btn" %>
-    <% end %>
   </div>
-<% else %>
-  <p>No items to rank.</p>
 <% end %>
 
-  <div class="item-ranking">
-    <h4>Rank this Item</h4>
-    <!-- Pass item data as data attributes -->
-    <%= form_with url: update_item_ranking_path(@tier_list, @current_item), method: :patch, local: true, html: { id: "ranking-form", data: { item_name: @current_item.name, item_description: @current_item.description || "Subtitle placeholder text" } } do |f| %>
-      <%= f.label :ranking, "Select Rank" %>
-      <%= f.select :ranking, options_for_select((1..6).map { |n| [n, n] }, @item_ranking&.ranking), {}, { id: "rank-select" } %>
-      <%= f.submit "Update Ranking" %>
-    <% end %>
-  </div>
+<!-- Navigation buttons (use local variables passed from controller) -->
+<div class="navigation" data-tier-list-id="<%= @tier_list.id %>">
+  <!-- Always render both buttons without disabling them -->
+  <button class="btn" id="previous-item-btn" data-item-id="<%= @previous_item_id || '' %>">
+    Previous Item
+  </button>
+  <button class="btn" id="next-item-btn" data-item-id="<%= @next_item_id || '' %>">
+    Next Item
+  </button>
+</div>
+
+
+
+<div class="item-ranking">
+  <h4>Rank this Item</h4>
+  <!-- Pass item data as data attributes -->
+  <%= form_with url: update_item_ranking_path(@tier_list, @current_item), method: :patch, local: true, html: { id: "ranking-form", data: { item_name: @current_item.name, item_description: @current_item.description || "Subtitle placeholder text" } } do |f| %>
+    <%= f.label :ranking, "Select Rank" %>
+    <%= f.select :ranking, options_for_select((1..6).map { |n| [n, n] }, @item_ranking&.ranking), {}, { id: "rank-select" } %>
+    <%= f.submit "Update Ranking" %>
+  <% end %>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  function loadItem(event) {
+    event.preventDefault();
+
+    const itemId = event.target.getAttribute("data-item-id");
+    const tierListId = document.querySelector(".navigation")?.getAttribute("data-tier-list-id");
+
+    console.log("Tier List ID:", tierListId);
+    console.log("Item ID:", itemId);
+
+    if (!itemId || !tierListId) {
+      console.error("Item ID or Tier List ID not found.");
+      return;
+    }
+
+    fetch(`/tier_lists/${tierListId}/items/${itemId}`, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        console.log("Fetched Data:", data);
+
+        // Update the name element
+        const nameElement = document.getElementById("item-name");
+        if (nameElement) {
+          nameElement.textContent = data.name;
+          console.log("Updated name to:", data.name);
+        } else {
+          console.error("Name element not found");
+        }
+
+        // Update the description element
+        const descriptionElement = document.getElementById("item-description");
+        if (descriptionElement) {
+          descriptionElement.textContent = data.description || "No description available";
+          console.log("Updated description to:", data.description);
+        } else {
+          console.error("Description element not found");
+        }
+
+        // Update the image element
+        const imageElement = document.getElementById("item-image");
+        if (data.image_url) {
+          if (!imageElement) {
+            const newImage = document.createElement("img");
+            newImage.style.width = "100%";
+            newImage.src = data.image_url;
+            newImage.alt = `${data.name} image`;
+            document.querySelector(".item-card-content").prepend(newImage);
+            console.log("Created and updated new image URL to:", data.image_url);
+          } else {
+            imageElement.src = data.image_url;
+            imageElement.alt = `${data.name} image`;
+            console.log("Updated existing image URL to:", data.image_url);
+          }
+        } else if (imageElement) {
+          imageElement.remove();
+          console.log("Removed image element as no image URL was provided");
+        }
+
+        // Update navigation buttons' data-item-id attributes for next and previous items
+        const previousButton = document.getElementById("previous-item-btn");
+        const nextButton = document.getElementById("next-item-btn");
+
+        if (previousButton && data.previous_item_id) {
+          previousButton.setAttribute("data-item-id", data.previous_item_id);
+          console.log("Updated previous item ID to:", data.previous_item_id);
+        } else if (previousButton) {
+          previousButton.setAttribute("data-item-id", ""); // Clear item ID if no previous item
+          console.log("Cleared previous item ID");
+        }
+
+        if (nextButton && data.next_item_id) {
+          nextButton.setAttribute("data-item-id", data.next_item_id);
+          console.log("Updated next item ID to:", data.next_item_id);
+        } else if (nextButton) {
+          nextButton.setAttribute("data-item-id", ""); // Clear item ID if no next item
+          console.log("Cleared next item ID");
+        }
+      })
+      .catch(error => console.error("Error loading item:", error));
+  }
+
+  // Attach event listeners to navigation buttons
+  document.querySelectorAll(".navigation .btn").forEach(button => {
+    button.addEventListener("click", loadItem);
+  });
+});
+
+
+
+
+
+</script>

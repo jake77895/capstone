@@ -6,17 +6,89 @@
   <div class="item-card-content">
     <!-- Text Content -->
     <div class="item-text">
-      <h3 class="item-name"><%= @current_item&.name || "Item name" %></h3>
-      <p class="item-description"><%= @current_item&.description || "Subtitle placeholder text" %></p>
+      <h3 id="item-name"><%= @current_item&.name || "Item name" %></h3>
+      <p id="item-description"><%= @current_item&.description || "Subtitle placeholder text" %></p>
     </div>
 
     <!-- Image Content -->
     <div class="item-image">
       <% if @current_item&.image&.attached? %>
-        <%= image_tag @current_item.image, alt: "#{@current_item.name} image" %>
+        <%= image_tag @current_item.image, alt: "#{@current_item.name} image", id: "item-image" %>
       <% else %>
-        <%= image_tag "placeholder.jpg", alt: "Placeholder image" %>
+        <%= image_tag "placeholder.jpg", alt: "Placeholder image", id: "item-image" %>
       <% end %>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  function loadItem(event) {
+    event.preventDefault();
+
+    const itemId = event.target.getAttribute("data-item-id");
+    const tierListId = document.querySelector(".navigation")?.getAttribute("data-tier-list-id");
+
+    if (!itemId || !tierListId) {
+      console.error("Item ID or Tier List ID not found.");
+      return;
+    }
+
+    fetch(`/tier_lists/${tierListId}/items/${itemId}`, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        console.log("Fetched Data:", data);
+
+        // Update the name element
+        const nameElement = document.getElementById("item-name");
+        if (nameElement) {
+          nameElement.textContent = data.name || "Item name";
+        }
+
+        // Update the description element
+        const descriptionElement = document.getElementById("item-description");
+        if (descriptionElement) {
+          descriptionElement.textContent = data.description || "Subtitle placeholder text";
+        }
+
+        // Update the image element
+        const imageElement = document.getElementById("item-image");
+        if (imageElement) {
+          if (data.image_url) {
+            imageElement.src = data.image_url;
+            imageElement.alt = `${data.name} image`;
+          } else {
+            imageElement.src = "/path/to/placeholder.jpg"; // Use the correct path for your placeholder image
+            imageElement.alt = "Placeholder image";
+          }
+        }
+
+        // Update navigation buttons' data-item-id attributes for next and previous items
+        const previousButton = document.getElementById("previous-item-btn");
+        const nextButton = document.getElementById("next-item-btn");
+
+        if (previousButton) {
+          previousButton.setAttribute("data-item-id", data.previous_item_id || "");
+        }
+
+        if (nextButton) {
+          nextButton.setAttribute("data-item-id", data.next_item_id || "");
+        }
+      })
+      .catch(error => console.error("Error loading item:", error));
+  }
+
+  // Attach event listeners to navigation buttons
+  document.querySelectorAll(".navigation .btn").forEach(button => {
+    button.addEventListener("click", loadItem);
+  });
+});
+
+</script>

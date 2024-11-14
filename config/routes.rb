@@ -15,9 +15,11 @@ Rails.application.routes.draw do
   # post "/submit_tl", to: "items#create", as: :submit_tl
   
   resources :tier_lists do
-    resources :items, only: [:new, :create, :index] # For adding items to tier lists
+    resources :items, only: [:new, :create, :index, :show] # Add :show here to enable standard show route for items
     resources :item_ranks, only: [:edit, :update] # For updating ranks and other details
   end
+
+  
 
   patch 'tier_lists/:tier_list_id/items/:item_id/ranking', to: 'item_rankings#update', as: :update_item_ranking
 
