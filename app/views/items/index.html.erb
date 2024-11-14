@@ -19,7 +19,7 @@
 
       <!-- S Tier -->
       <div class="tier-row">
-          <div class="tier-label">S</div>
+          <div class="tier-label tier-s">S</div>
           <div class="tier-items" id="tier-s">
               <!-- Items for S tier will go here -->
           </div>
@@ -27,7 +27,7 @@
 
       <!-- A Tier -->
       <div class="tier-row">
-          <div class="tier-label">A</div>
+          <div class="tier-label tier-a">A</div>
           <div class="tier-items" id="tier-a">
               <!-- Items for A tier will go here -->
           </div>
@@ -35,7 +35,7 @@
 
       <!-- B Tier -->
       <div class="tier-row">
-          <div class="tier-label">B</div>
+          <div class="tier-label tier-b">B</div>
           <div class="tier-items" id="tier-b">
               <!-- Items for B tier will go here -->
           </div>
@@ -43,7 +43,7 @@
 
       <!-- C Tier -->
       <div class="tier-row">
-          <div class="tier-label">C</div>
+          <div class="tier-label tier-c">C</div>
           <div class="tier-items" id="tier-c">
               <!-- Items for C tier will go here -->
           </div>
@@ -51,7 +51,7 @@
 
       <!-- D Tier -->
       <div class="tier-row">
-          <div class="tier-label">D</div>
+          <div class="tier-label tier-d">D</div>
           <div class="tier-items" id="tier-d">
               <!-- Items for D tier will go here -->
           </div>
@@ -59,13 +59,17 @@
 
       <!-- F Tier -->
       <div class="tier-row">
-          <div class="tier-label">F</div>
+          <div class="tier-label tier-f">F</div>
           <div class="tier-items" id="tier-f">
               <!-- Items for F tier will go here -->
           </div>
       </div>
       
   </div>
+
+    <!-- Render the item card display -->
+    <%= render partial: "item_card_display", locals: { item: @item } %>
+
 
     <!-- Popup Partial (will be displayed on button click) -->
     <%= render partial: "items/item_popup", locals: { item: @current_item } %>

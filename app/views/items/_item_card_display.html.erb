@@ -1,0 +1,19 @@
+<!-- _item_card_display.html.erb -->
+<div class="item-card-display" onclick="showPopup()">
+  <div class="item-card-content">
+    <!-- Text Content -->
+    <div class="item-text">
+      <h2><%= item.name %></h2>
+      <p><%= item.description || "Subtitle placeholder text" %></p>
+    </div>
+
+    <!-- Image Content -->
+    <div class="item-image">
+      <% if item.image.attached? %>
+        <%= image_tag item.image, alt: "#{item.name} image" %>
+      <% else %>
+        <%= image_tag "placeholder.jpg", alt: "Placeholder image" %>
+      <% end %>
+    </div>
+  </div>
+</div>

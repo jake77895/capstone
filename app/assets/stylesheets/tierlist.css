@@ -1,0 +1,67 @@
+/* tierlist.css */
+
+/* General tier list styling */
+.tier-list {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Each tier row styling */
+.tier-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.tier-row:last-child {
+  border-bottom: none;
+}
+
+/* Tier label styling */
+/* General styling for tier labels */
+.tier-label {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #fff;
+  padding: 10px;
+  width: 50px;
+  text-align: center;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+/* Custom colors for each tier */
+.tier-s { background-color: #f44336; } /* Red for S */
+.tier-a { background-color: #ff9800; } /* Orange for A */
+.tier-b { background-color: #ffeb3b; } /* Yellow for B */
+.tier-c { background-color: #4caf50; } /* Green for C */
+.tier-d { background-color: #00bcd4; } /* Blue for D */
+.tier-f { background-color: #9c27b0; } /* Purple for F */
+
+/* Container for items in each tier */
+.tier-items {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  min-height: 50px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+/* Styling for each item card inside tier-items (if added) */
+.tier-item {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
