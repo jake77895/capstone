@@ -25,12 +25,12 @@
   <p>No items to rank.</p>
 <% end %>
 
-  <!-- Ranking Selection -->
   <div class="item-ranking">
     <h4>Rank this Item</h4>
-      <%= form_with url: update_item_ranking_path(@tier_list, @current_item), method: :patch, local: true do |f| %>
-        <%= f.label :ranking, "Select Rank" %>
-        <%= f.number_field :ranking, value: @item_ranking&.ranking %>
-        <%= f.submit "Update Ranking" %>
-      <% end %>
+    <!-- Pass item data as data attributes -->
+    <%= form_with url: update_item_ranking_path(@tier_list, @current_item), method: :patch, local: true, html: { id: "ranking-form", data: { item_name: @current_item.name, item_description: @current_item.description || "Subtitle placeholder text" } } do |f| %>
+      <%= f.label :ranking, "Select Rank" %>
+      <%= f.select :ranking, options_for_select((1..6).map { |n| [n, n] }, @item_ranking&.ranking), {}, { id: "rank-select" } %>
+      <%= f.submit "Update Ranking" %>
+    <% end %>
   </div>

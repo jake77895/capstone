@@ -67,8 +67,10 @@
       
   </div>
 
-    <!-- Render the item card display -->
-    <%= render partial: "item_card_display", locals: { item: @item } %>
+    <!-- This hidden container holds the template of item_card_display for JavaScript to clone and use -->
+    <div id="item-card-template" style="display: none;">
+      <%= render partial: "items/item_card_display", locals: { item: @item } %>
+    </div>
 
 
     <!-- Popup Partial (will be displayed on button click) -->
@@ -95,14 +97,87 @@
 
   </div>
 </body>
-</html>
 
 <script>
-  function showPopup() {
+
+function showPopup() {
     document.getElementById('popup-overlay').style.display = 'flex';
   }
 
   function hidePopup() {
     document.getElementById('popup-overlay').style.display = 'none';
   }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rankSelect = document.getElementById("rank-select");
+
+  if (!rankSelect) {
+    console.error("rank-select element not found");
+    return;
+  }
+
+  console.log("rank-select element found");
+
+  rankSelect.addEventListener("change", () => {
+    const selectedRank = rankSelect.value;
+    console.log("Selected Rank:", selectedRank);
+
+    const rankToTierMap = {
+      "1": "tier-s",
+      "2": "tier-a",
+      "3": "tier-b",
+      "4": "tier-c",
+      "5": "tier-d",
+      "6": "tier-f"
+    };
+
+    const targetTierId = rankToTierMap[selectedRank];
+    const targetTier = document.getElementById(targetTierId);
+
+    // Remove any existing item cards from all tiers
+    document.querySelectorAll(".tier-items .item-card-display").forEach(card => {
+      card.remove();
+    });
+
+    if (targetTier) {
+      // Clone the template
+      const template = document.getElementById("item-card-template");
+      const clonedCard = template.cloneNode(true);
+
+      // Make cloned card visible
+      clonedCard.style.display = "block";
+      clonedCard.removeAttribute("id"); // Remove ID to avoid duplicate IDs
+
+      // Get item data from data attributes
+      const itemName = document.getElementById("ranking-form").dataset.itemName;
+      const itemDescription = document.getElementById("ranking-form").dataset.itemDescription;
+
+      // Update cloned card content
+      const nameElement = clonedCard.querySelector(".item-name");
+      const descriptionElement = clonedCard.querySelector(".item-description");
+
+      if (nameElement) {
+        nameElement.textContent = itemName;
+      } else {
+        console.error("Name element not found in cloned card.");
+      }
+
+      if (descriptionElement) {
+        descriptionElement.textContent = itemDescription;
+      } else {
+        console.error("Description element not found in cloned card.");
+      }
+
+      // Append the updated card to the selected tier
+      targetTier.appendChild(clonedCard);
+      console.log(`Cloned item card added to ${targetTierId}`);
+    } else {
+      console.log(`Tier with ID '${targetTierId}' not found`);
+    }
+  });
+});
+
 </script>
+
+</html>
