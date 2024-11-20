@@ -7,11 +7,11 @@ class ItemRankingsController < ApplicationController
     @tier_list = TierList.find(params[:tier_list_id])
     @item = Item.find(params[:item_id])
     @item_ranking = ItemRanking.find_or_initialize_by(item: @item, tier_list: @tier_list)
-  
+    
     if @item_ranking.update(ranking: params[:ranking])
-      redirect_to tier_list_items_path(@tier_list), notice: "Ranking updated successfully."
+      redirect_to tier_list_items_path(@tier_list, current_item_id: params[:item_id]), notice: "Ranking updated successfully."
     else
-      redirect_to tier_list_items_path(@tier_list), alert: "Error updating ranking."
+      redirect_to tier_list_items_path(@tier_list, current_item_id: params[:item_id]), alert: "Error updating ranking."
     end
   end
 

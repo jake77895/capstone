@@ -30,25 +30,25 @@ class ItemsController < ApplicationController
   
   def index
     @tier_list = TierList.find(params[:tier_list_id])
-
-    if @tier_list.items.present?
-      @items = @tier_list.items
-      @current_item = @items.find_by(id: params[:current_item_id]) || @items.first
   
-      @previous_item_id = @items.where("items.id < ?", @current_item.id).order("items.id DESC").pluck(:id).first
-      @next_item_id = @items.where("items.id > ?", @current_item.id).order("items.id ASC").pluck(:id).first      
-
-      Rails.logger.debug "Previous Item ID: #{@previous_item_id}"
-      Rails.logger.debug "Next Item ID: #{@next_item_id}"
-
+    if @tier_list.items.present?
+      items = @tier_list.items.order(:id) # Ensure items are ordered
+      current_item_id = params[:current_item_id] || items.first.id
+  
+      # Dynamically set @current_item based on params[:current_item_id]
+      @current_item = items.find_by(id: current_item_id)
+  
+      # Determine the current item's position in the list
+      current_index = items.index(@current_item)
+      @next_item = items[current_index + 1] if current_index && current_index + 1 < items.size
+      @previous_item = items[current_index - 1] if current_index && current_index > 0
     else
+      # Handle empty tier list case
       @current_item = nil
-      @previous_item_id = nil
-      @next_item_id = nil
+      @next_item = nil
+      @previous_item = nil
     end
-
-
-    # Render the index view or redirect as needed
+  
     render :index
   end
   

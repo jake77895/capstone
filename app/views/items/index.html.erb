@@ -92,15 +92,8 @@
       <!-- Add more content as needed -->
       
       <!-- Render the item card as a button -->
-      <%= render partial: "items/item_card", locals: { 
-          item: @current_item, 
-          previous_item_id: @previous_item_id, 
-          next_item_id: @next_item_id 
-        } %>
+      <%= render partial: "items/item_card" %>
 
-    <%= debug(@current_item) %>
-    <%= debug(@previous_item_id) %>
-    <%= debug(@next_item_id) %>
 
       
 
@@ -109,18 +102,6 @@
 
   </div>
 
-  <% @items.each do |item| %>
-  <div
-    class="item-data"
-    data-item-id="<%= item.id %>"
-    data-name="<%= item.name %>"
-    data-description="<%= item.description %>"
-    data-image-url="<%= item.image.attached? ? url_for(item.image) : '' %>"
-    data-previous-item-id="<%= @items.where("items.id < ?", item.id).order("items.id DESC").pluck(:id).first %>"
-    data-next-item-id="<%= @items.where("items.id > ?", item.id).order("items.id ASC").pluck(:id).first %>"
-    style="display: none;"
-  ></div>
-<% end %>
 
 </body>
 
@@ -135,7 +116,7 @@ function showPopup() {
   }
 
 </script>
-
+<!--
 <script>
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -209,7 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
-<script>
+<script>-->
+
+<!--dfdfdf
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Attaching event listeners to navigation buttons...");
@@ -291,5 +274,6 @@ function loadItem(event) {
 
 
 </script>
+-->
 
 </html>
