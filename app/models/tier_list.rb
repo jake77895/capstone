@@ -5,6 +5,7 @@
 #  id                :bigint           not null, primary key
 #  custom_fields     :json
 #  name              :string
+#  published         :boolean          default(FALSE), not null
 #  short_description :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null

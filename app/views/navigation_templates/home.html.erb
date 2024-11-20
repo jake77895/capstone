@@ -1,2 +1,14 @@
 
+<% if @published_tier_lists.any? %>
+
+<h3> Published Tier Lists </h3>
+  <ul>
+    <% @published_tier_lists.each do |tier_list| %>
+      <li>
+        <%= link_to tier_list.name, tier_list_items_path(tier_list) %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
 <%= link_to "Create Tier List", new_tier_list_path %>

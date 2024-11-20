@@ -94,13 +94,16 @@
       <!-- Render the item card as a button -->
       <%= render partial: "items/item_card" %>
 
-
+      <%= button_to "Publish Tier List", publish_tier_list_path(@tier_list), method: :patch, class: "btn btn-primary" %>
       
 
 
     </div>
 
   </div>
+
+  
+
 
 
 </body>

@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   get 'item_ranks/update'
 
   # Home 
-  get("/", { :controller => "nav", :action => "index"})
-  root to: 'pages#home'
+  # get("/", { :controller => "nav", :action => "index"})
+  root to: 'home#index'
 
   # Create Tier Lists
   get("/create_item_categories", { :controller => "create_tls", :action=> "create"})
@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   resources :tier_lists do
     resources :items, only: [:new, :create, :index, :show] # Add :show here to enable standard show route for items
     resources :item_ranks, only: [:edit, :update] # For updating ranks and other details
+    member do
+      patch :publish
+    end
   end
 
   

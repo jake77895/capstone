@@ -29,6 +29,20 @@ class TierListsController < ApplicationController
     @item = Item.new  # Initialize a new item for the form
   end
 
+  def publish
+    @tier_list = TierList.find(params[:id])
+    
+    if @tier_list.update(published: true)
+      redirect_to root_path, notice: "Tier list published successfully."
+    else
+      redirect_to root_path, alert: "Failed to publish tier list."
+    end
+  end
+
+  def published
+    @tier_lists = TierList.where(published: true)
+  end
+
   private
 
   def tier_list_params
@@ -45,4 +59,7 @@ class TierListsController < ApplicationController
       }
     end.compact # Remove any `nil` entries from the array
   end
+
+
+
 end
