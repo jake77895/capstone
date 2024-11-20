@@ -15,7 +15,7 @@
       <% if @current_item&.image&.attached? %>
         <%= image_tag @current_item.image, alt: "#{@current_item.name} image", id: "item-image" %>
       <% else %>
-        <%= image_tag "placeholder.jpg", alt: "Placeholder image", id: "item-image" %>
+        <%= image_tag "item_card_display_placeholder_image.jpg", alt: "Placeholder image", id: "item-image" %>
       <% end %>
     </div>
   </div>

@@ -69,7 +69,11 @@
 
     <!-- This hidden container holds the template of item_card_display for JavaScript to clone and use -->
     <div id="item-card-template" style="display: none;">
-      <%= render partial: "items/item_card_display", locals: { item: @item } %>
+      <%= render partial: "items/item_card", locals: { 
+        item: @current_item, 
+        previous_item_id: @previous_item_id, 
+        next_item_id: @next_item_id 
+      } %>
     </div>
 
 
@@ -88,7 +92,15 @@
       <!-- Add more content as needed -->
       
       <!-- Render the item card as a button -->
-      <%= render partial: "items/item_card", locals: { item: @current_item, previous_item_id: @previous_item_id, next_item_id: @next_item_id } %>
+      <%= render partial: "items/item_card", locals: { 
+          item: @current_item, 
+          previous_item_id: @previous_item_id, 
+          next_item_id: @next_item_id 
+        } %>
+
+    <%= debug(@current_item) %>
+    <%= debug(@previous_item_id) %>
+    <%= debug(@next_item_id) %>
 
       
 
@@ -96,6 +108,20 @@
     </div>
 
   </div>
+
+  <% @items.each do |item| %>
+  <div
+    class="item-data"
+    data-item-id="<%= item.id %>"
+    data-name="<%= item.name %>"
+    data-description="<%= item.description %>"
+    data-image-url="<%= item.image.attached? ? url_for(item.image) : '' %>"
+    data-previous-item-id="<%= @items.where("items.id < ?", item.id).order("items.id DESC").pluck(:id).first %>"
+    data-next-item-id="<%= @items.where("items.id > ?", item.id).order("items.id ASC").pluck(:id).first %>"
+    style="display: none;"
+  ></div>
+<% end %>
+
 </body>
 
 <script>
@@ -185,42 +211,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Attaching event listeners to navigation buttons...");
+
+  const navigationButtons = document.querySelectorAll(".navigation .btn");
+
+  navigationButtons.forEach((button) => {
+    button.removeEventListener("click", loadItem); // Prevent duplicate listeners
+    button.addEventListener("click", loadItem);
+  });
+});
+
+
 function loadItem(event) {
   event.preventDefault();
 
   const itemId = event.target.getAttribute("data-item-id");
-  console.log("Loading item with ID:", itemId);
+  const tierListId = document.querySelector(".navigation").getAttribute("data-tier-list-id");
 
-  if (!itemId) {
-    console.error("Item ID not found on button");
+  console.log("Clicked button with Item ID:", itemId);
+  console.log("Tier List ID:", tierListId);
+
+  if (!itemId || !tierListId) {
+    console.error("Item ID or Tier List ID not found.");
     return;
   }
 
   fetch(`/tier_lists/${tierListId}/items/${itemId}`, {
     headers: {
-      "X-Requested-With": "XMLHttpRequest"
-    }
+      "X-Requested-With": "XMLHttpRequest",
+    },
   })
-    .then(response => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.text();  // Expect HTML response
-    })
-    .then(html => {
-      console.log("Loaded item HTML:", html); // Debugging log
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fetched Data:", data);
 
-      // Replace the item-card content
-      const itemCard = document.querySelector(".item-card");
+      // Update the item card content
+      const itemCard = document.querySelector("#item-card-container");
       if (itemCard) {
-        itemCard.outerHTML = html;
-        console.log("Updated item-card content successfully");
-      } else {
-        console.error("Item card not found");
-      }
+        console.log("Updating item card...");
+        itemCard.querySelector("#item-name").textContent = data.name || "No name added";
+        itemCard.querySelector("#item-description").textContent =
+          data.description || "No description available";
 
-      // Attach event listeners again if necessary (like `showPopup`)
+          console.log(itemCard.querySelector("#item-name"));
+          console.log(itemCard.querySelector("#item-description"));
+          console.log(itemCard.querySelector("#item-image"));
+
+          itemCard.style.border = "2px solid red"; // Add temporary style for debugging
+          setTimeout(() => (itemCard.style.border = ""), 1000); // Remove it after 1 second
+
+
+        const imageElement = itemCard.querySelector("#item-image");
+        if (data.image_url) {
+          if (imageElement) {
+            imageElement.src = data.image_url;
+            imageElement.alt = `${data.name} image`;
+          } else {
+            const newImage = document.createElement("img");
+            newImage.id = "item-image";
+            newImage.src = data.image_url;
+            newImage.alt = `${data.name} image`;
+            itemCard.querySelector(".item-card-content").prepend(newImage);
+          }
+        } else if (imageElement) {
+          imageElement.remove();
+        }
+      } else {
+        console.error("Item card container not found.");
+      }
     })
-    .catch(error => console.error("Error loading item:", error));
+    .catch((error) => console.error("Error loading item:", error));
+
+
+
 }
+
+
 
 
 </script>

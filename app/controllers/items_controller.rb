@@ -1,19 +1,18 @@
 class ItemsController < ApplicationController
   before_action :set_tier_list, only: [:create, :show, :index]
+  include Rails.application.routes.url_helpers
 
   def set_tier_list
     @tier_list = TierList.find(params[:tier_list_id])
   end
 
   def show
-    @item = @tier_list.items.find(params[:id])
     @tier_list = TierList.find(params[:tier_list_id])
+    @item = @tier_list.items.find(params[:id])
 
-    # Example logic to find previous and next item IDs (adjust as needed)
-    previous_item_id = Item.where("id < ?", @item.id).order(id: :desc).pluck(:id).first
-    next_item_id = Item.where("id > ?", @item.id).order(id: :asc).pluck(:id).first
-    
-  
+    # Determine previous and next item IDs in the tier list
+    previous_item_id = @tier_list.items.where("items.id < ?", @item.id).order("items.id DESC").pluck(:id).first
+    next_item_id = @tier_list.items.where("items.id > ?", @item.id).order("items.id ASC").pluck(:id).first    
 
     respond_to do |format|
       format.html # For standard page load
@@ -31,12 +30,22 @@ class ItemsController < ApplicationController
   
   def index
     @tier_list = TierList.find(params[:tier_list_id])
-    @items = @tier_list.items # Adjust if items are related differently
-    @item = @tier_list.items.first # or set to the item you want to display
 
-    @current_item = @items.find_by(id: params[:current_item_id]) || @items.first
-    @previous_item_id = @items.where("items.id < ?", @current_item.id).last&.id
-    @next_item_id = @items.where("items.id > ?", @current_item.id).first&.id
+    if @tier_list.items.present?
+      @items = @tier_list.items
+      @current_item = @items.find_by(id: params[:current_item_id]) || @items.first
+  
+      @previous_item_id = @items.where("items.id < ?", @current_item.id).order("items.id DESC").pluck(:id).first
+      @next_item_id = @items.where("items.id > ?", @current_item.id).order("items.id ASC").pluck(:id).first      
+
+      Rails.logger.debug "Previous Item ID: #{@previous_item_id}"
+      Rails.logger.debug "Next Item ID: #{@next_item_id}"
+
+    else
+      @current_item = nil
+      @previous_item_id = nil
+      @next_item_id = nil
+    end
 
 
     # Render the index view or redirect as needed

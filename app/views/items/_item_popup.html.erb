@@ -6,7 +6,7 @@
 
     <!-- Detailed item content -->
     <div class="popup-header">
-      <h1><%= item.name %></h1>
+      <h1><%= item&.name.presence || "Placeholder Name" %></h1>
     </div>
 
     <div class="popup-image">
